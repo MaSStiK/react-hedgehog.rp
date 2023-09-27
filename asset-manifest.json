@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/react-hedgehog.rp/static/css/main.073c9b0a.css",
-    "main.js": "/react-hedgehog.rp/static/js/main.5c681985.js",
+    "main.css": "/react-hedgehog.rp/static/css/main.d9bea30d.css",
+    "main.js": "/react-hedgehog.rp/static/js/main.e33b29b6.js",
     "static/js/787.d5bebfb5.chunk.js": "/react-hedgehog.rp/static/js/787.d5bebfb5.chunk.js",
-    "static/media/logo.svg": "/react-hedgehog.rp/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/react-hedgehog.rp/index.html",
-    "main.073c9b0a.css.map": "/react-hedgehog.rp/static/css/main.073c9b0a.css.map",
-    "main.5c681985.js.map": "/react-hedgehog.rp/static/js/main.5c681985.js.map",
+    "main.d9bea30d.css.map": "/react-hedgehog.rp/static/css/main.d9bea30d.css.map",
+    "main.e33b29b6.js.map": "/react-hedgehog.rp/static/js/main.e33b29b6.js.map",
     "787.d5bebfb5.chunk.js.map": "/react-hedgehog.rp/static/js/787.d5bebfb5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.5c681985.js"
+    "static/css/main.d9bea30d.css",
+    "static/js/main.e33b29b6.js"
   ]
 }
