@@ -1,7 +1,8 @@
 // Импорт основных библиотек
 import React from "react";
-import { Routes, Link, Route, BrowserRouter as Router } from "react-router-dom";
+import { Routes, Link, Route, HashRouter as Router } from "react-router-dom";
 import navLogo from "./assets/logo/logo.png"
+
 
 // Импорт стилей
 import "./styles/style.css";
@@ -53,7 +54,7 @@ export default function App() {
 
             <article>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route exact path="/" element={<Home />} />
                     <Route path="*" element={<h1>Такой страницы не существует</h1>} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/news" element={<h1>Эта страница еще не сделана</h1>} />
