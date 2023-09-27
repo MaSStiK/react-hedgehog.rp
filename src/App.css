@@ -1,38 +1,65 @@
-.App {
-  text-align: center;
+body {
+    display: flex;
+    justify-content: center;
+    background-color: var(--bg-primary);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Основной контейнер всего контента */
+#root {
+    display: flex;
+    gap: 20px;
+
+    padding: 0 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Блок навигации */
+nav {
+    width: 212px; /* 200px размер навигации + 12px скролл */
+    height: 100%; /* Высота во всю страницу */
+    padding: 20px 0; /* Внешний отступ блоков - 20px */
+    overflow: overlay; /* Скроллбар поверх */
+    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Блок страницы */
+article {
+    width: 562px; /* 550px размер страницы + 12px скролл */
+    height: 100%; /* Высота во всю страницу */
+    padding: 20px 0; /* Внешний отступ блоков - 20px */
+    overflow: overlay; /* Скроллбар поверх */
+    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
-.App-link {
-  color: #61dafb;
+/* Блок с контентом */
+section {
+    width: 550px;
+    height: auto; /* Высота определяется контентом блока */
+
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--border-radius);
+    padding: 12px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+/* Скролл */
+*::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+/* Подложка скролла в цвет фона */
+::-webkit-scrollbar-track {
+    border-radius: 4px;
+    background-color: #00000000;
+}
+
+/* Скрол цвета основного блока */
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: var(--bg-secondary);
+}
+
+#main-block {
+    height: 1000px;
 }
