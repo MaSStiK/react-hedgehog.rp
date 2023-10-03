@@ -4,13 +4,14 @@ a {
     cursor: pointer;
 }
 
-.link {
+.link-text {
     color: var(--text-link);
 }
 
+
 /* Только для десктопных устройств */
 @media (hover: hover) {
-    .link:hover, .link:active {
+    .link-text:hover, .link-text:active {
         text-decoration: underline;
     }
 }
@@ -18,7 +19,7 @@ a {
 /* Только на мобильных дивайсах */
 @media (hover: none) {
     /* На мобильных девайсах ссылки подчеркнуты */
-    .link {
+    .link-text {
         text-decoration: underline;
     }
 }

@@ -1,56 +1,24 @@
 // Импорт основных библиотек
 import React from "react";
-import { Routes, Link, Route, HashRouter as Router } from "react-router-dom";
-import navLogo from "./assets/logo/logo.png"
+import { Routes, Route, HashRouter as Router } from "react-router-dom";
+import Nav from "./components/Nav/Nav"
 
 
 // Импорт стилей
 import "./styles/style.css";
 import "./App.css";
-import "./styles/nav/nav.css"
 
 // Импорт страниц
-import Admin from "./pages/admin/Admin";
-import Home from "./pages/home/Home";
+import Dev from "./pages/dev/dev";
+import Home from "./pages/home/home";
 
 
 export default function App() {
     return (
         <Router>
-            <nav>
-                <div className="nav-content">
-                    <div className="nav-logo">
-                        <img src={navLogo} alt="nav-logo" />
-                    </div>
-                    <ul>
-                        <li>
-                            <Link to="/">Главная</Link>
-                        </li>
-                        <li>
-                            <Link to="/news">Новости</Link>
-                        </li>
-                        <li>
-                            <Link to="/users">Участники</Link>
-                        </li>
-                        <li>
-                            <Link to="/countries">Страны</Link>
-                        </li>
-                        <li>
-                            <Link to="/nations">Нации</Link>
-                        </li>
-                        <div className="nav-divider"></div>
-                        <li>
-                            <Link to="/tools">Инструменты</Link>
-                        </li>
-                        <li>
-                            <Link to="/help">Помощь</Link>
-                        </li>
-                        <li>
-                            <Link to="/about">О нас</Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <aside>
+                <Nav />
+            </aside>
 
             <article>
                 <Routes>
@@ -65,7 +33,7 @@ export default function App() {
                     <Route path="/help" element={<h1>Эта страница еще не сделана</h1>} />
                     <Route path="/about" element={<h1>Эта страница еще не сделана</h1>} />
 
-                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/dev" element={<Dev />} />
                 </Routes>
             </article>
         </Router>
