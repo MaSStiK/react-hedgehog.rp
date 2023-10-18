@@ -1,41 +1,45 @@
 // Импорт основных библиотек
 import React from "react";
 import { Routes, Route, HashRouter as Router } from "react-router-dom";
-import Nav from "./components/Nav/Nav"
-
 
 // Импорт стилей
 import "./styles/style.css";
 import "./App.css";
+import "./App-phone.css";
 
 // Импорт страниц
-import Dev from "./pages/dev/dev";
-import Home from "./pages/home/home";
+import Home from "./components/Home/Home";
+import Error404 from "./components/Error404/Error404";
+
+import Dev from "./components/Dev/Dev";
+
+import Login from "./components/Login/Login";
+import Registration from "./components/Registration/Registration";
+
 
 
 export default function App() {
     return (
         <Router>
-            <aside>
-                <Nav />
-            </aside>
+            <Routes>
+                <Route exact path="/" element={<Home />} />
+                <Route path="*" element={<h1>Такой страницы не существует</h1>} />
+                <Route path="/home" element={<Home />} />
 
-            <article>
-                <Routes>
-                    <Route exact path="/" element={<Home />} />
-                    <Route path="*" element={<h1>Такой страницы не существует</h1>} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/news" element={<h1>Эта страница еще не сделана</h1>} />
-                    <Route path="/users" element={<h1>Эта страница еще не сделана</h1>} />
-                    <Route path="/countries" element={<h1>Эта страница еще не сделана</h1>} />
-                    <Route path="/nations" element={<h1>Эта страница еще не сделана</h1>} />
-                    <Route path="/tools" element={<h1>Эта страница еще не сделана</h1>} />
-                    <Route path="/help" element={<h1>Эта страница еще не сделана</h1>} />
-                    <Route path="/about" element={<h1>Эта страница еще не сделана</h1>} />
+                <Route path="/news" element={<Error404 />} />
+                <Route path="/users" element={<Error404 />} />
+                <Route path="/countries" element={<Error404 />} />
+                <Route path="/nations" element={<Error404 />} />
 
-                    <Route path="/dev" element={<Dev />} />
-                </Routes>
-            </article>
+                <Route path="/tools" element={<Error404 />} />
+                <Route path="/help" element={<Error404 />} />
+                <Route path="/about" element={<Error404 />} />
+
+                <Route path="/dev" element={<Dev />} />
+
+                <Route path="/login" element={<Login />} />
+                <Route path="/registration" element={<Registration />} />
+            </Routes>
         </Router>
     )
 }

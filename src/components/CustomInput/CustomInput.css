@@ -46,6 +46,7 @@ textarea:not(:read-only):focus {
 input:read-only,
 textarea:read-only {
     color: var(--text-gray);
+    cursor: not-allowed;
 }
 
 /* Плейсхолдер */
@@ -74,14 +75,17 @@ input:-webkit-autofill:focus {
     left: 4px;
 
     color: var(--text-dark);
-    cursor: text;
+    /* Отключаем взаимодействие с лейблом */
+    pointer-events: none;
 }
 
 /* Перемещаем текст выше если в инпуте есть значение или инпут активен */
-.custom-input-wrapper input:not(:read-only):focus ~ label,
-.custom-input-wrapper input:not(:read-only):valid ~ label,
-.custom-input-wrapper textarea:not(:read-only):focus ~ label,
-.custom-input-wrapper textarea:not(:read-only):valid ~ label {
+.custom-input-wrapper input:focus:not(:read-only) ~ label,
+.custom-input-wrapper input:valid:not(:read-only) ~ label,
+.custom-input-wrapper input:read-only ~ label,
+.custom-input-wrapper textarea:focus:not(:read-only) ~ label,
+.custom-input-wrapper textarea:valid:not(:read-only) ~ label,
+.custom-input-wrapper textarea:read-only ~ label {
     translate: 0px -16px;
 
     font-size: var(--p-small-size);
@@ -91,36 +95,36 @@ input:-webkit-autofill:focus {
 }
 
 /* При нажатии на инпут зеленая обводка */
-.custom-input-wrapper input:not(:read-only):focus,
-.custom-input-wrapper textarea:not(:read-only):focus {
+.custom-input-wrapper input:focus:not(:read-only),
+.custom-input-wrapper textarea:focus:not(:read-only) {
     border: 1px solid var(--border-input-focus);
 }
 
+
 /* При нажатии на инпут зеленый текст лейбла */
-.custom-input-wrapper input:not(:read-only):focus ~ label,
-.custom-input-wrapper textarea:not(:read-only):focus ~ label {
+.custom-input-wrapper input:focus:not(:read-only) ~ label,
+.custom-input-wrapper textarea:focus:not(:read-only) ~ label {
     color: var(--border-input-focus);
     
 }
 
-
 /* Стиль для ошибки */
-.custom-input-wrapper input.error {
+.custom-input-wrapper input.error:not(:read-only) {
     border: 1px solid var(--border-input-error);
 }
 
-.custom-input-wrapper input.error ~ label {
-    color: var(--border-input-error) !important;
+.custom-input-wrapper input.error:not(:read-only) ~ label {
+    color: var(--border-input-error);
 }
 
 
 /* Инпут с паролем */
-.password-input input {
+.custom-input-password input {
     padding-right: 44px; /* 32px + 12px */
 }
 
 /* Кнопка внутри обвертки */
-.password-input button {
+.custom-input-password button {
     /* Кнопка внутри инпута 28px на 28px */
     width: var(--button-img-size);
     height: var(--button-img-size);
@@ -131,14 +135,10 @@ input:-webkit-autofill:focus {
 }
 
 /* Картинка внутри обвертки */
-.input-wrapper button img {
-    /* Картинка внутри инпута 28px на 28px */
-    width: 20px;
-    height: 20px;
-
-    position: absolute;
-    top: 0;
-    right: 0;
+.custom-input-password button img {
+    /* Картинка внутри кнопки 28px на 28px */
+    width: var(--button-img-size);
+    height: var(--button-img-size);
 }
 
 /* Кпнока с полем пароля */

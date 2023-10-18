@@ -11,7 +11,7 @@
     --text-white: rgba(255,255,255, 1);
     --text-gray: rgba(255,255,255, 0.5); /* 50% прозрачность */
     --text-dark: rgba(255,255,255, 0.3); /* 30% прозрачность */
-    --text-red: #B00020;
+    --text-red: #D60027;
     --text-link: #6D5FE4;
 }
 
@@ -38,13 +38,10 @@ h4, .h4 {
 
 p {
     font-size: var(--p-size);
-    word-break: break-word;
-    white-space: pre-wrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+    font-weight: 400;
 }
 
-small {
+small, .small {
     font-size: var(--p-small-size);
 }
 
@@ -55,16 +52,20 @@ label {
 
 
 /* Стили для цвета текста */
-.text-primary {
+.text-white {
     color: var(--text-white);
 }
 
-.text-secondary {
+.text-gray {
     color: var(--text-gray);
 }
 
-.text-darker {
+.text-dark {
     color: var(--text-dark);
+}
+
+.text-red {
+    color: var(--text-red);
 }
 
 

@@ -3,7 +3,7 @@ nav {
     width: calc(100% - 8px); /* Растояние между контентом и скролом - 8px */
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--block-gap);
 
     z-index: var(--z-nav);
     
@@ -13,7 +13,7 @@ nav {
 nav ul {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Расстояние между кнопками - 12px */
+    /* gap: var(--block-gap); */
 }
 
 /* Контейнер кнопки */
@@ -24,7 +24,8 @@ nav ul li {
 /* Кнопка */
 nav ul li a {
     width: 100%;
-    height: var(--button-height);
+    height: 48px;
+    /* height: var(--button-height); */
     background-color: var(--button-bg-tp);
     /* background-color: var(--button-bg-primary); */
 
@@ -34,6 +35,11 @@ nav ul li a {
     border-radius: var(--border-radius);
 
     cursor: pointer;
+}
+
+nav ul li button {
+    height: 48px;
+    margin-bottom: var(--block-gap);
 }
 
 /* Только для десктопных устройств */
@@ -47,8 +53,10 @@ nav ul li a {
 /* Разделитель */
 .nav-divider {
     width: 90%;
-    margin: 0 auto; /* Центр */
+
     border-bottom: 1px solid var(--border-primary);
+
+    margin: var(--block-gap) auto; /* Центр */
 }
 
 

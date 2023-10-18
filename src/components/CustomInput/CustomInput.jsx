@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import "./CustomInput.css"
-import EyeOpen from "../../assets/icons/EyeOpen.svg"
-import EyeClosed from "../../assets/icons/EyeClosed.svg"
+import imgEyeOpen from "../../assets/icons/EyeOpen.svg"
+import imgEyeClosed from "../../assets/icons/EyeClosed.svg"
 import $ from 'jquery'
 
 
@@ -20,14 +20,14 @@ export default function CustomInput(props) {
     }
 
     return (
-        <div className={`custom-input-wrapper ${props.password && "password-input"} ${props.className}`}>
+        <div className={`custom-input-wrapper ${props.password ? "custom-input-password" : null} ${props.className}`} style={props.style}>
             {props.children}
             <label htmlFor={props.children.props.id}>{props.label}</label>
 
             {/* Для инпута с паролем кнопка показа пароля */}
             {props.password &&
-                <button onClick={toggleShowPassword}>
-                    {showPassword ? <img src={EyeOpen} alt="show-password" /> : <img src={EyeClosed} alt="hide-password" />}
+                <button type="button" onClick={toggleShowPassword}>
+                    {showPassword ? <img src={imgEyeClosed} alt="show-password" /> : <img src={imgEyeOpen} alt="hide-password" />}
                 </button>
             }
         </div>
@@ -36,13 +36,5 @@ export default function CustomInput(props) {
 
 CustomInput.defaultProps = {
     className: "",
-    password: false
+    password: null
 }
-
-
-// return (
-//     <fieldset>
-//         <legend>{props.title}</legend>
-//         <input type="text" size="10" />
-//     </fieldset>
-// )

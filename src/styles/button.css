@@ -26,6 +26,8 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: var(--block-gap);
+    padding: var(--block-gap);
 
     color: var(--text-white);
     font-size: var(--text-h4);

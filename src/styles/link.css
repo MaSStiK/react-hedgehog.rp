@@ -1,17 +1,17 @@
-/* Ссылка (Указывается для тега <a> если в нем только текст) */
+/* Ссылка (Указывается для тега <a> (Link) если в нем только текст) */
 a {
     text-decoration: none;
     cursor: pointer;
 }
 
-.link-text {
+.text-link {
     color: var(--text-link);
 }
 
 
 /* Только для десктопных устройств */
 @media (hover: hover) {
-    .link-text:hover, .link-text:active {
+    .text-link:hover, .text-link:active {
         text-decoration: underline;
     }
 }
@@ -19,7 +19,7 @@ a {
 /* Только на мобильных дивайсах */
 @media (hover: none) {
     /* На мобильных девайсах ссылки подчеркнуты */
-    .link-text {
+    .text-link {
         text-decoration: underline;
     }
 }
