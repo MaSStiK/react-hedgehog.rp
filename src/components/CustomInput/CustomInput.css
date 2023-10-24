@@ -77,6 +77,10 @@ input:-webkit-autofill:focus {
     color: var(--text-dark);
     /* Отключаем взаимодействие с лейблом */
     pointer-events: none;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Перемещаем текст выше если в инпуте есть значение или инпут активен */

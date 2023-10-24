@@ -6,6 +6,7 @@ a {
 
 .text-link {
     color: var(--text-link);
+    cursor: pointer;
 }
 
 

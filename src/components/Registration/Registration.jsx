@@ -37,6 +37,10 @@ export default function Dev() {
         setTimeout(() => setshowCopyMessage(false), 5000)
     }
 
+    const openGeografPage = () => {
+        window.open("https://vk.com/geografrp", "_blank", "noreferrer");
+    }
+
 
     // Начать поиск сообщений
     const firstPageSubmit = () => {
@@ -261,7 +265,7 @@ export default function Dev() {
                 <div id="section-reg__first-page" className={showPage !== 1 ? "hidden" : null}>
                     <h2>Регистрация</h2>
                     <h3>1) Прикрепите свой профиль в ВК</h3>
-                    <p>Отправте код ниже <Link to="https://vk.com/geografrp" target="_blank" rel="noopener noreferrer" className="text-link">нашему боту "Географ"</Link></p>
+                    <p>Отправте код ниже <span onClick={openGeografPage} className="text-link">нашему боту "Географ"</span></p>
 
                     <button className="tp section-reg__code-button" onClick={handleCopyButton}>
                         <p id="section-reg__code">Код: {vkCode}</p>
