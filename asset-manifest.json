@@ -1,21 +1,25 @@
 {
   "files": {
-    "main.css": "/react-hedgehog.rp/static/css/main.1b9ae11d.css",
-    "main.js": "/react-hedgehog.rp/static/js/main.8e142609.js",
+    "main.css": "/react-hedgehog.rp/static/css/main.719c29f4.css",
+    "main.js": "/react-hedgehog.rp/static/js/main.3122b29a.js",
     "static/js/787.d5bebfb5.chunk.js": "/react-hedgehog.rp/static/js/787.d5bebfb5.chunk.js",
     "static/media/base-photo.png": "/react-hedgehog.rp/static/media/base-photo.49fa144e08a18bf402b7.png",
     "static/media/waiting.gif": "/react-hedgehog.rp/static/media/waiting.3fb26d9b3c3c823ae786.gif",
     "index.html": "/react-hedgehog.rp/index.html",
     "static/media/EyeClosed.svg": "/react-hedgehog.rp/static/media/EyeClosed.c9d06d2cd2d7ad20d8bc94367bc86ce2.svg",
     "static/media/Burger.svg": "/react-hedgehog.rp/static/media/Burger.1238890ab9606ef3e29ee741715849d2.svg",
+    "static/media/Edit.svg": "/react-hedgehog.rp/static/media/Edit.c1d6fb2fbc5312fc173994fc9f1adb9d.svg",
     "static/media/Copy.svg": "/react-hedgehog.rp/static/media/Copy.7ffc359c22065bd0d6e5d9cb5fc92b46.svg",
     "static/media/EyeOpen.svg": "/react-hedgehog.rp/static/media/EyeOpen.d3ce7dcea12c0d5f818b3372553a1be5.svg",
-    "main.1b9ae11d.css.map": "/react-hedgehog.rp/static/css/main.1b9ae11d.css.map",
-    "main.8e142609.js.map": "/react-hedgehog.rp/static/js/main.8e142609.js.map",
+    "static/media/Private.svg": "/react-hedgehog.rp/static/media/Private.e5efc690a81f3850ad7367f91286264e.svg",
+    "static/media/Close.svg": "/react-hedgehog.rp/static/media/Close.437f928fae128032d2f76eb2241bc89e.svg",
+    "static/media/Search.svg": "/react-hedgehog.rp/static/media/Search.df6bc24ea6354b17a5b8577dc9c555b9.svg",
+    "main.719c29f4.css.map": "/react-hedgehog.rp/static/css/main.719c29f4.css.map",
+    "main.3122b29a.js.map": "/react-hedgehog.rp/static/js/main.3122b29a.js.map",
     "787.d5bebfb5.chunk.js.map": "/react-hedgehog.rp/static/js/787.d5bebfb5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1b9ae11d.css",
-    "static/js/main.8e142609.js"
+    "static/css/main.719c29f4.css",
+    "static/js/main.3122b29a.js"
   ]
 }
