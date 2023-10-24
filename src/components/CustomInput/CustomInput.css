@@ -144,7 +144,7 @@ input:-webkit-autofill:focus {
 /* Кпнока с полем пароля */
 /* <div class="input-wrapper" id="password-input">
     <input type="password" placeholder="Пароль">
-    <button class="image-button" type="button"><img src="../assets/images/icons/EyeOpen.svg" alt="show-password"></button>                    
+    <button class="button-icon" type="button"><img src="../assets/images/icons/EyeOpen.svg" alt="show-password"></button>                    
 </div> */
 
 

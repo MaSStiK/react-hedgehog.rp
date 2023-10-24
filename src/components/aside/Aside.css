@@ -1,12 +1,22 @@
+/* Обвертка навигации */
+.nav-wrapper {
+    width: 100%;
+    height: 100%;
+    padding: 20px 0; /* Внешний отступ блоков - 20px */
+
+    overflow: overlay; /* Скроллбар поверх */
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    z-index: var(--z-nav);
+}
+
 /* Навигация */
 nav {
     width: calc(100% - 8px); /* Растояние между контентом и скролом - 8px */
+
     display: flex;
     flex-direction: column;
     gap: var(--block-gap);
-
-    z-index: var(--z-nav);
-    
 }
 
 /* Кнопки */
@@ -39,7 +49,6 @@ nav ul li a {
 
 nav ul li button {
     height: 48px;
-    margin-bottom: var(--block-gap);
 }
 
 /* Только для десктопных устройств */
@@ -71,4 +80,8 @@ nav ul li button {
 .nav-logo img {
     width: 100px;
     cursor: pointer;
+}
+
+#nav-menu-show, #nav-menu-hide, #nav-menu-bg, #nav-phone-user {
+    display: none;
 }

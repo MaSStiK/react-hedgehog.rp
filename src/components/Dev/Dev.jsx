@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import CustomInput from "../CustomInput/CustomInput"
-import { CONSTS } from "../Global"
 import Aside from "../aside/Aside"
+import imgSearch from "../../assets/icons/Search.svg"
+import imgPrivate from "../../assets/icons/Private.svg"
+import imgCopy from "../../assets/icons/Copy.svg"
+import imgEdit from "../../assets/icons/Edit.svg"
+
 
 import "./Dev.css"
 
 export default function Dev() {
     useEffect(() => {
         document.title = "Ежиное-РП | dev"
-        console.log(CONSTS);
     }, [])
 
     const [exampleInputValue, setexampleInputValue] = useState("");
@@ -49,6 +52,21 @@ export default function Dev() {
                     <button className="tp">tp (transparent)</button>
                     <button disabled>disabled</button>
                     <Link to="#" className="text-link">Текст-ссылка по которой можно куда то попасть</Link>
+
+                    <div style={{display: "flex", gap: "12px"}}>
+                        <button className="button-icon">
+                            <img src={imgSearch} alt="button-test" />
+                        </button>
+                        <button className="button-icon">
+                            <img src={imgPrivate} alt="button-test" />
+                        </button>
+                        <button className="button-icon">
+                            <img src={imgCopy} alt="button-test" />
+                        </button>
+                        <button className="button-icon">
+                            <img src={imgEdit} alt="button-test" />
+                        </button>
+                    </div>
                 </section>
                     
                 <section className="dev-block">

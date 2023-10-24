@@ -21,9 +21,8 @@ body {
 aside {
     width: 212px; /* 200px размер навигации + 12px скролл */
     height: 100%; /* Высота во всю страницу */
-    padding: 20px 0; /* Внешний отступ блоков - 20px */
-    overflow: overlay; /* Скроллбар поверх */
-    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    z-index: var(--z-nav-content);
 }
 
 /* Блок страницы */
@@ -62,5 +61,5 @@ section {
 /* Скрол цвета основного блока */
 ::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: var(--bg-secondary);
+    background-color: #403d4a;
 }
