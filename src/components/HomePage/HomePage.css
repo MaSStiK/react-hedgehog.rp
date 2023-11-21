@@ -4,9 +4,15 @@
     gap: var(--article-gap);
 }
 
-.section-home {
+.section-home__row {
     display: flex;
     flex-direction: row;
+    gap: var(--block-gap);
+}
+
+.section-home__column {
+    display: flex;
+    flex-direction: column;
     gap: var(--block-gap);
 }
 

@@ -11,7 +11,7 @@
     }
 
     .user-profile__top-name h2 {
-        font-size: 20px;
+        font-size: var(--h3-size);
         max-height: none;
     }
 
@@ -26,6 +26,10 @@
         
         background-color: var(--bg-primary);
         object-fit: cover;
+    }
+
+    .user-profile__bio {
+        font-size: var(--p-small-size);
     }
 
 }
