@@ -11,7 +11,7 @@
     margin: 0 auto;
 }
 
-#section-reg__first-page, #section-reg__middle-page, #section-reg__last-page  {
+#section-reg__page-first, #section-reg__page-middle, #section-reg__page-last {
     width: 100%;
     display: flex;
     flex-direction: column;

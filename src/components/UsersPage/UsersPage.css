@@ -1,10 +1,10 @@
-.dev-page {
+#article-users {
     display: flex;
     flex-direction: column;
     gap: var(--article-gap);
 }
 
-.dev-block {
+#article-users section {
     display: flex;
     flex-direction: column;
     gap: var(--block-gap);

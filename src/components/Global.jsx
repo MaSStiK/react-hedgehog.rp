@@ -17,10 +17,14 @@ export function getUrlParams() {
 
 // Получить переменные из ссылки
 export function setPageLoading(show=true) {
-    if (show) {
-        $("#root").append(`<div id="page-loading"></div>`)
+    if (!show) {
+        $("#page-loading").remove()
         return
     }
 
-    $("#page-loading").remove()
+    $("#root").append(`<div id="page-loading"></div>`)
+}
+
+export function openLink(url)  {
+    window.open(url, "_blank", "noreferrer");
 }

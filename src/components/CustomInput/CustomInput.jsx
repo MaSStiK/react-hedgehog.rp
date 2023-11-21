@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import "./CustomInput.css"
+import { useState } from 'react'
+import $ from 'jquery'
 import imgEyeOpen from "../../assets/icons/EyeOpen.svg"
 import imgEyeClosed from "../../assets/icons/EyeClosed.svg"
-import $ from 'jquery'
 
+import "./CustomInput.css"
 
 export default function CustomInput(props) {
     const [showPassword, setShowPassword] = useState(false)

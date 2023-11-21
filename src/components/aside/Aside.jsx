@@ -1,99 +1,117 @@
-import React from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from 'react'
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { DataContext } from "../Context"
 import imgLogo from "../../assets/logo/logo.png"
 import imgBurger from "../../assets/icons/Burger.svg"
 import imgClose from "../../assets/icons/Close.svg"
+import CustomButton from "../CustomButton/CustomButton"
+
 import "./Aside.css"
 import "./Aside-phone.css"
-import CustomButton from "../CustomButton/CustomButton"
-import { useState } from 'react';
-
 
 export default function Aside() {
-    let Navigate = useNavigate()
+    const Navigate = useNavigate()
+    const Context = useContext(DataContext)
 
-    let userData = localStorage.userData ? JSON.parse(localStorage.userData) : undefined
 
     const [hideNavMenu, sethideNavMenu] = useState(true);
 
     const handleShowNavMenu = () => {
-        sethideNavMenu(!hideNavMenu)    
+        sethideNavMenu(!hideNavMenu)
     }
 
     return (
         <aside>
+            {/* Темный фон во время открытого меню навигации */}
            <div id="nav-menu-bg" className={hideNavMenu ? "hide-nav-menu" : null} onClick={handleShowNavMenu}></div>
 
+            {/* Лого в мобильной навигации */}
+            <button id="nav-logo-phone" className="button-icon" onClick={() => {Navigate("/")}} >
+                <img src={imgLogo} alt="nav-logo-phone" />
+            </button>
+
+            {/* Кнопка профиля в мобильной навигации */}
+            {Context.userData // Если есть юзердата - рендерим мобильную кнопку профиля
+                ? <CustomButton
+                    id="nav-phone-user"
+                    type="tp"
+                    src={Context.userData.photo}
+                    onClick={() => {Navigate("/users/" + Context.userData.id)}} 
+                  />
+                : null
+            }
+
+            {/* Кнопка открытия мобильного меню навигации */}
             <button id="nav-menu-show" className="button-icon" onClick={handleShowNavMenu}>
                 <img src={imgBurger} alt="open-menu" />
             </button>
 
-            {userData // Если есть юзердата - рендерим мобильную кнопку профиля
-                ? <CustomButton
-                    id="nav-phone-user"
-                    type="tp"
-                    src={userData.photo}
-                    text={userData.name}
-                    onClick={() => {Navigate("/login")}} 
-                  />
-                : null 
-            }
-
+            {/* Контейнер навигации */}
             <div className={`nav-wrapper ${hideNavMenu ? "hide-nav-menu" : null}`}>
                 <nav>
-
+                    {/* Закрытие мобильного меню */}
                     <button id="nav-menu-hide" className="button-icon" onClick={handleShowNavMenu}>
                         <img src={imgClose} alt="close-menu" />
                     </button>
 
-                    <div className="nav-logo">
+                    <div id="nav-logo">
                         <img src={imgLogo} alt="nav-logo" onClick={() => {Navigate("/")}} />
                     </div>
                     
                     <ul>
                         <li>
-                            {userData // Если есть юзердата - рендерим кнопку профиля
+                            {Context.userData // Если есть юзердата - рендерим кнопку профиля
                                 ? <CustomButton
-                                    src={userData.photo}
-                                    text={userData.name}
-                                    subText={"@" + userData.id}
-                                    onClick={() => {Navigate("/login")}} 
+                                    src={Context.userData.photo}
+                                    text={Context.userData.name}
+                                    subText={Context.userData.tag}
+                                    onClick={() => {Navigate("/users/" + Context.userData.id)}} 
                                     style={{marginBottom: "var(--block-gap)"}}
                                   />
-                                : <button className="green" onClick={() => {Navigate("/login")}}>Авторизация</button>
+                                : <Link to="/login">
+                                    <button className="green">Авторизация</button>
+                                  </Link>
                             }
                         </li>
                         
-                        {userData && // Если есть юзердата - ренлерим кнопку страны
+                        {Context.userData && // Если есть юзердата - ренлерим кнопку страны
                             <li>
-                                {userData.country // Если страны нету - рендерим кнопку для создания страны
+                                {Object.keys(Context.userData.country).length // Если страны нету - рендерим кнопку для создания страны
                                     ? <CustomButton
-                                        src={userData.photo}
-                                        text={userData.name}
-                                        subText={"@" + userData.id} 
+                                        src={Context.userData.photo}
+                                        text={Context.userData.name}
+                                        subText={"@" + Context.userData.id} 
                                       />
-                                    : <button className="green" onClick={() => {Navigate("/login")}}>Моя страна</button>
+                                    : <Link to="/login">
+                                        <button className="green">Моя страна</button>
+                                      </Link>
                                 }
                             </li>
                         }
 
                         <div className="nav-divider"></div>
 
-                        <li><Link to="/">Главная</Link></li>
-                        <li><Link to="/news">Новости</Link></li>
-                        <li><Link to="/users">Участники</Link></li>
-                        <li><Link to="/countries">Страны</Link></li>
-                        <li><Link to="/nations">Нации</Link></li>
+                        <li><NavLink to="/">Главная</NavLink></li>
+                        <li><NavLink to="/news">Новости</NavLink></li>
+                        <li><NavLink to="/users">Участники</NavLink></li>
+                        <li><NavLink to="/countries">Страны</NavLink></li>
+                        <li><NavLink to="/nations">Нации</NavLink></li>
 
                         <div className="nav-divider"></div>
 
-                        <li><Link to="/tools">Инструменты</Link></li>
-                        <li><Link to="/help">Помощь</Link></li>
-                        <li><Link to="/about">О нас</Link></li>
+                        <li><NavLink to="/tools">Инструменты</NavLink></li>
+                        <li><NavLink to="/help">Помощь</NavLink></li>
+                        <li><NavLink to="/about">О нас</NavLink></li>
 
-                        <div className="nav-divider"></div>
 
-                        <li><Link to="/dev">dev</Link></li>
+                        {Context.isAdmin
+                            ? <>
+                                <div className="nav-divider"></div>
+                                <li><NavLink to="/dev">dev</NavLink></li>
+                              </>
+                            : null
+                        }
+                        
                     </ul>
                 </nav>
             </div>

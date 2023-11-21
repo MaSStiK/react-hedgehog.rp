@@ -1,22 +1,25 @@
-import React, { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { DataContext } from "../Context"
 import CustomInput from "../CustomInput/CustomInput"
 import CustomButton from "../CustomButton/CustomButton"
-import "./Registration.css"
-import "./Registration-phone.css"
+import { GSAPI } from "../GS-API"
+import { VKAPI } from "../VK-API"
+import { CONSTS, setPageLoading, openLink } from "../Global"
 import imgLogo from "../../assets/logo/logo.png"
 import imgCopy from "../../assets/icons/Copy.svg"
-import { GSAPI } from "../Google-scripts-API"
-import { VKAPI } from "../VK-API"
-import { CONSTS, setPageLoading } from "../Global"
+
+import "./RegistrationPage.css"
+import "./RegistrationPage-phone.css"
 
 
-export default function Dev() {
+export default function RegistrationPage() {
+    const Navigate = useNavigate()
+    const Context = useContext(DataContext)
+
     useEffect(() => {
-        document.title = "Ежиное-РП | Регистрация"
+        document.title = "Регистрация | Ежиное-РП"
     }, [])
-
-    let Navigate = useNavigate()
 
     // Уникальный ключ
     function generateVkCode() {
@@ -37,10 +40,6 @@ export default function Dev() {
         setTimeout(() => setshowCopyMessage(false), 5000)
     }
 
-    const openGeografPage = () => {
-        window.open("https://vk.com/geografrp", "_blank", "noreferrer");
-    }
-
 
     // Начать поиск сообщений
     const firstPageSubmit = () => {
@@ -49,7 +48,7 @@ export default function Dev() {
         setshowVkFindUserError(false)
 
         // Получаем все диалоги
-        VKAPI('messages.getConversations', {}, (data) => {
+        VKAPI("messages.getConversations", {}, (data) => {
             data = data.response
 
             let vkFindedUserId = null
@@ -71,7 +70,7 @@ export default function Dev() {
             }
             
             // Находим информацию о пользователе
-            VKAPI('users.get', {user_id: vkFindedUserId, fields: "photo_200"}, (data) => {
+            VKAPI("users.get", {user_id: vkFindedUserId, fields: "photo_200"}, (data) => {
                 data = data.response[0]
 
                 setvkData({
@@ -83,8 +82,8 @@ export default function Dev() {
         })
     }
 
-    // Возвращение на первую страницу
-    const middlePageBack = () => {
+    // Вернутся на первую страницу
+    const goFirstPage = () => {
         setvkCode(generateVkCode()) // Обновляем код
         setshowPage(1)
     }
@@ -108,32 +107,29 @@ export default function Dev() {
             // Если такого id нету - переходим на последнюю страницу
             setshowPage(3)
         })
-
     }
 
-    // Возвращение на вторую страницу
-    const lastPageback = () => {
-        setshowPage(2)
-    }
-
-
-    const [errorText, seterrorText] = useState("Неверный логин или пароль") // Текст ошибки
-    const [showErrortext, setshowErrortext] = useState(false) // Спрятать ли ошибку
-    const [loginInputError, setloginInputError] = useState(false) // Отображать ли ошибку инпута логина
-    const [passwordInputError, setpasswordInputError] = useState(false) // Отображать ли ошибку инпута пароля
-    const [passwordAgainInputError, setpasswordAgainInputError] = useState(false) // Отображать ли ошибку инпута повтора пароля
-    const [disableSubmitButton, setdisableSubmitButton] = useState(false) // Отключить ли кнопку
+    const [formState, setformState] = useState({
+        errorText: "", // Текст ошибки
+        showErrorText: false, // Спрятать ли ошибку
+        loginInputError: false, // Отображать ли ошибку инпута логина
+        passwordInputError: false, // Отображать ли ошибку инпута пароля
+        passwordAgainInputError: false, // Отображать ли ошибку инпута повтора пароля
+        disableSubmitButton: false // Отключить ли кнопку входа
+    })
 
     const loginInput = useRef()
     const passwordInput = useRef()
     const passwordAgainInput = useRef()
 
     // При обновлении любого из инпутов
-    const handleUnputUpdate = () => {
-        setloginInputError(false)
-        setpasswordInputError(false)
-        setpasswordAgainInputError(false)
-        setshowErrortext(false)
+    const handleInputUpdate = () => {
+        setformState({
+            showErrorText: false,
+            loginInputError: false,
+            passwordInputError: false,
+            passwordAgainInputError: false
+        })
         loginInput.current.value = loginInput.current.value.replaceAll(" ", "_")
         passwordInput.current.value = passwordInput.current.value.replaceAll(" ", "_")
         passwordAgainInput.current.value = passwordAgainInput.current.value.replaceAll(" ", "_")
@@ -143,10 +139,13 @@ export default function Dev() {
     function regForm(event) {
         // Отключение базового перехода
         event.preventDefault()
-        setloginInputError(false)
-        setpasswordInputError(false)
-        setpasswordAgainInputError(false)
-        setshowErrortext(false)
+
+        setformState({
+            showErrorText: false,
+            loginInputError: false,
+            passwordInputError: false,
+            passwordAgainInputError: false
+        })
 
         let formLogin = loginInput.current.value
         let formPassword = passwordInput.current.value
@@ -154,32 +153,36 @@ export default function Dev() {
 
         // Проверка длины логина
         if (formLogin.length < CONSTS.loginMin || formLogin.length > CONSTS.loginMax) {
-            setloginInputError(true)
-            seterrorText(formLogin.length < CONSTS.loginMin
-                ? `Логин меньше ${CONSTS.loginMin} символов`
-                : `Логин больше ${CONSTS.loginMax} символов`
-            )
-            setshowErrortext(true)
+            setformState({
+                errorText: formLogin.length < CONSTS.loginMin
+                    ? `Логин меньше ${CONSTS.loginMin} символов`
+                    : `Логин больше ${CONSTS.loginMax} символов`,
+                showErrorText: true,
+                loginInputError: true
+            })
             return
         }
 
         // Проверка длины пароля
         if (formPassword.length < CONSTS.passwordMin || formPassword.length > CONSTS.passwordMax) {
-            setpasswordInputError(true)
-            seterrorText(formPassword.length < CONSTS.passwordMin
-                ? `Пароль меньше ${CONSTS.passwordMin} символов`
-                : `Пароль больше ${CONSTS.passwordMax} символов`
-            )
-            setshowErrortext(true)
+            setformState({
+                errorText: formPassword.length < CONSTS.passwordMin
+                    ? `Пароль меньше ${CONSTS.passwordMin} символов`
+                    : `Пароль больше ${CONSTS.passwordMax} символов`,
+                showErrorText: true,
+                passwordInputError: true
+            })
             return
         }
 
         // Проверка совпадения пароля
         if (formPassword !== formPasswordAgain) {
-            setpasswordInputError(true)
-            setpasswordAgainInputError(true)
-            seterrorText(`Пароли не совпадают`)
-            setshowErrortext(true)
+            setformState({
+                errorText: "Пароли не совпадают",
+                showErrorText: true,
+                passwordInputError: true,
+                passwordAgainInputError: true
+            })
             return
         }
 
@@ -188,11 +191,13 @@ export default function Dev() {
         try {
             token = btoa(formLogin + " " + formPassword)
         } catch {
-            setloginInputError(true)
-            setpasswordInputError(true)
-            setpasswordAgainInputError(true)
-            seterrorText("Введены запрещенные символы")
-            setshowErrortext(true)
+            setformState({
+                errorText: "Введены запрещенные символы",
+                showErrorText: true,
+                loginInputError: true,
+                passwordInputError: true,
+                passwordAgainInputError: true
+            })
             return
         }
 
@@ -221,17 +226,21 @@ export default function Dev() {
         }
 
         // Отключаем кнопку только в случае если прошло все проверки
-        setdisableSubmitButton(true)
+        setformState({
+            disableSubmitButton: true,
+        })
         setPageLoading()
 
-        GSAPI("POSTuser", {data: JSON.stringify(newUserData)}, (data) => {
+        GSAPI("POSTuser", {data: JSON.stringify(newUserData), login: formLogin}, (data) => {
 
             // Если токен совпал
             if (!data.success) {
-                setloginInputError(true)
-                seterrorText("Введенный логин занят")
-                setshowErrortext(true)
-                setdisableSubmitButton(false)
+                setformState({
+                    errorText: "Введенный логин занят",
+                    showErrorText: true,
+                    loginInputError: true,
+                    disableSubmitButton: true
+                })
 
                 setPageLoading(false)
                 return
@@ -239,20 +248,21 @@ export default function Dev() {
 
             // Отправляем сообщение в беседу логов
             let VKAPImessage = `Регистрация пользователя:\nname: ${vkData.name}\nid: ${vkData.id}\nlink: ${"https://vk.com/id" + vkData.id}`
-            VKAPI('messages.send', {peer_id: 2000000007, random_id: 0, message: VKAPImessage}, () => {
+            VKAPI("messages.send", {peer_id: 2000000007, random_id: 0, message: VKAPImessage}, () => {
 
                 // Отправляем сообщение пользователю
-                let VKAPImessage2 = "Вы успешно зарегистрировались!"
-                VKAPI('messages.send', {peer_id: vkData.id, random_id: 0, message: VKAPImessage2}, () => {
+                VKAPImessage = "Вы успешно зарегистрировались!"
+                VKAPI("messages.send", {peer_id: vkData.id, random_id: 0, message: VKAPImessage}, () => {
                     setPageLoading(false)
 
                     // Если успех - сохраняем и открываем главную
                     localStorage.userData = JSON.stringify(newUserData)
+                    Context.setuserData(newUserData)
+                    // Тут не проверяем на админа, ибо новый админ не создается
                     Navigate("/home")
                 })
             })
         })
-            
     }
 
     return (
@@ -262,10 +272,10 @@ export default function Dev() {
             </div>
 
             <section id="section-reg">
-                <div id="section-reg__first-page" className={showPage !== 1 ? "hidden" : null}>
+                <div id="section-reg__page-first" className={showPage !== 1 ? "hidden" : null}>
                     <h2>Регистрация</h2>
                     <h3>1) Прикрепите свой профиль в ВК</h3>
-                    <p>Отправте код ниже <span onClick={openGeografPage} className="text-link">нашему боту "Географ"</span></p>
+                    <p>Отправте код ниже <span onClick={() => openLink("https://vk.com/write-202912556")} className="text-link">нашему боту "Географ"</span></p>
 
                     <button className="tp section-reg__code-button" onClick={handleCopyButton}>
                         <p id="section-reg__code">Код: {vkCode}</p>
@@ -279,7 +289,7 @@ export default function Dev() {
                     <button onClick={firstPageSubmit}>Отправил</button>
                 </div>
 
-                <div id="section-reg__middle-page" className={showPage !== 2 ? "hidden" : null}>
+                <div id="section-reg__page-middle" className={showPage !== 2 ? "hidden" : null}>
                     <h2>Регистрация</h2>
                     <h3>2) Проверка аккаунта</h3>
 
@@ -290,8 +300,8 @@ export default function Dev() {
                         <Link to={`https://vk.com/id${vkData.id}`} target="_blank" rel="noopener noreferrer">
                             <CustomButton src={vkData.photo} text={vkData.name} />
                         </Link>
-                        <button className="red" onClick={middlePageBack}>Нет</button>
                         <button className="green" onClick={middlePageSubmit}>Да</button>
+                        <button className="red" onClick={goFirstPage}>Нет</button>
                     </>
                     }
 
@@ -299,13 +309,13 @@ export default function Dev() {
                     {showVkFindUserError &&
                     <>
                         <p className="text-red">{textVkFindUserError}</p>
-                        <button onClick={middlePageBack}>Назад</button>
+                        <button onClick={goFirstPage}>Назад</button>
                     </>
                     }
                     
                 </div>
 
-                <form onSubmit={regForm} id="section-reg__last-page" className={showPage !== 3 ? "hidden" : null}>
+                <form onSubmit={regForm} id="section-reg__page-last" className={showPage !== 3 ? "hidden" : null}>
                     <h2>Регистрация</h2>
                     <h3>3) Придумайте логин и пароль</h3>
 
@@ -314,9 +324,9 @@ export default function Dev() {
                             ref={loginInput}
                             type="text"
                             id="form-login"
-                            className={loginInputError ? "error" : null}
+                            className={formState.loginInputError ? "error" : null}
                             maxLength={CONSTS.loginMax}
-                            onInput={handleUnputUpdate}
+                            onInput={handleInputUpdate}
                             required
                         />
                     </CustomInput>
@@ -328,9 +338,9 @@ export default function Dev() {
                             ref={passwordInput}
                             type="password"
                             id="form-password"
-                            className={passwordInputError ? "error" : null}
+                            className={formState.passwordInputError ? "error" : null}
                             maxLength={CONSTS.passwordMax}
-                            onInput={handleUnputUpdate}
+                            onInput={handleInputUpdate}
                             required
                         />
                     </CustomInput>
@@ -342,17 +352,17 @@ export default function Dev() {
                             ref={passwordAgainInput}
                             type="password"
                             id="form-password-again"
-                            className={passwordAgainInputError ? "error" : null}
+                            className={formState.passwordAgainInputError ? "error" : null}
                             maxLength={CONSTS.passwordMax}
-                            onInput={handleUnputUpdate}
+                            onInput={handleInputUpdate}
                             required
                         />
                     </CustomInput>
 
-                    <p className={`text-red ${!showErrortext ? "hidden" : null}`}>{errorText}</p>
+                    <p className={`text-red ${!formState.showErrorText ? "hidden" : null}`}>{formState.errorText}</p>
 
-                    <button className="green section-reg__button" type="submit" disabled={disableSubmitButton}>Зарегистрироваться</button>
-                    <button type="button" onClick={lastPageback}>Назад</button>
+                    <button className="green section-reg__button" type="submit" disabled={formState.disableSubmitButton}>Зарегистрироваться</button>
+                    <button type="button" onClick={() => {setshowPage(2)}}>Назад</button>
                 </form>
             </section>
 

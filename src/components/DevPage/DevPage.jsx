@@ -1,19 +1,22 @@
-import React, { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { Link } from "react-router-dom"
 import CustomInput from "../CustomInput/CustomInput"
 import Aside from "../aside/Aside"
+import { DataContext } from "../Context"
 import imgSearch from "../../assets/icons/Search.svg"
 import imgPrivate from "../../assets/icons/Private.svg"
 import imgCopy from "../../assets/icons/Copy.svg"
 import imgEdit from "../../assets/icons/Edit.svg"
 
+import "./DevPage.css"
 
-import "./Dev.css"
+export default function DevPage() {
+    const Context = useContext(DataContext)
 
-export default function Dev() {
     useEffect(() => {
-        document.title = "Ежиное-РП | dev"
+        document.title = "dev | Ежиное-РП"
     }, [])
+
 
     const [exampleInputValue, setexampleInputValue] = useState("");
     const [exampleTextareaValue, setexampleTextareaValue] = useState("");
@@ -34,7 +37,9 @@ export default function Dev() {
         <>
             <Aside />
             
-            <article className="dev-page">
+            <article id="article-dev">
+                <h4 className="page-title text-dark">/dev</h4>
+
                 <section className="dev-block">
                     <h1>Never gonna give you up</h1>
                     <h2>Never gonna let you down</h2>

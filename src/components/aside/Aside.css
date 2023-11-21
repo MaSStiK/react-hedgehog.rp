@@ -37,7 +37,7 @@ nav ul li a {
     height: 48px;
     /* height: var(--button-height); */
     background-color: var(--button-bg-tp);
-    /* background-color: var(--button-bg-primary); */
+    position: relative;
 
     display: flex;
     justify-content: center;
@@ -49,6 +49,13 @@ nav ul li a {
 
 nav ul li button {
     height: 48px;
+}
+
+/* Активная вкладка навигации (Стрелочка сбоку) */
+nav ul li a.active::after {
+    content: ">";
+    position: absolute;
+    right: 20px;
 }
 
 /* Только для десктопных устройств */
@@ -70,18 +77,18 @@ nav ul li button {
 
 
 /* Логотип */
-.nav-logo {
+#nav-logo {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.nav-logo img {
+#nav-logo img {
     width: 100px;
     cursor: pointer;
 }
 
-#nav-menu-show, #nav-menu-hide, #nav-menu-bg, #nav-phone-user {
+#nav-menu-show, #nav-menu-hide, #nav-menu-bg, #nav-phone-user, #nav-logo-phone {
     display: none;
 }

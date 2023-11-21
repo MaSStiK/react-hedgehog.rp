@@ -22,21 +22,54 @@
         gap: 0px;
     }
 
+    #nav-logo {
+        display: none;
+    }
+
+    #nav-logo-phone {
+        display: flex;
+        width: 48px;
+        height: 48px;
+
+        margin-left: 8px;
+    }
+
+    #nav-logo-phone img {
+        width: 48px;
+        height: 48px;
+    }
+
 
     /* Кнопку открвтия навигации видно только на маленьких экранах */
     #nav-menu-show {
         display: flex;
-        float: right;
+        width: 48px;
+        height: 48px;
 
-        margin: 6px 8px 0 0;
+        position: absolute;
+        top: 0px;
+        right: 8px;
+    }
+
+    #nav-menu-show img {
+        width: 40px;
+        height: 40px;
     }
 
     /* Кнопка закрытия навигации */
     #nav-menu-hide {
         display: flex;
+        width: 48px;
+        height: 48px;
+
         margin-left: auto;
 
-        margin: 6px 0 0 auto;
+        margin: 0px 0 12px auto;
+    }
+
+    #nav-menu-hide img {
+        width: 40px;
+        height: 40px;
     }
 
     /* Скрытие полосы у навигации */
@@ -75,10 +108,12 @@
 
     /* Кнопка юзера в моб. версии */
     #nav-phone-user {
-        display: flex;
-        width: auto;
-        max-width: 150px;
+        width: 48px;
+        height: 48px;
 
-        margin-left: 8px;
+        display: flex;
+        position: absolute;
+        top: 0px;
+        right: 64px; /* 48px + 8px + 8px */
     }
 }

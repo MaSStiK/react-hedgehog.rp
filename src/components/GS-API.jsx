@@ -2,8 +2,8 @@ import $ from 'jquery';
 
 
 // Ссылка для обращение к api
-// const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbyamHBWfy6Ym4Hm1vSEFXGxwlI9a3r9um7ILfrsfMi2/dev"
-const GoogleSheetURL = "https://script.google.com/macros/s/AKfycby0lW312Mbs_mQwKpmE8pvwttoH8okemwnL__T3XgopMSrWoC0DfUgFNEnf7m3vNx_4wQ/exec"
+const devGoogleSheetURL = "https://script.google.com/macros/s/AKfycbyamHBWfy6Ym4Hm1vSEFXGxwlI9a3r9um7ILfrsfMi2/dev"
+const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbwxwsL82NdMpySgefaO5Ob2Ist3W_pU_vLOT8MfFHAh3UH9I0vz7ZEwU9qwslo_lEm39Q/exec"
 
 
 // Отправить запрос
