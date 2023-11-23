@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { DataContext } from "../Context"
 import CustomInput from "../CustomInput/CustomInput"
 import CustomButton from "../CustomButton/CustomButton"
-import Aside from "../aside/Aside"
+import Aside from "../Aside/Aside"
 
 import "./UsersPage.css"
 
@@ -41,7 +41,7 @@ export default function UsersPage() {
             <article id="article-users">
                 <h4 className="page-title text-dark">/ Все участники</h4>
 
-                <section>
+                <section className="section-users">
                     <CustomInput label="Поиск участника">
                         <input type="text" ref={searchRef} onInput={searchUsers} required />
                     </CustomInput>

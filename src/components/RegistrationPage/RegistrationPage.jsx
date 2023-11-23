@@ -368,7 +368,7 @@ export default function RegistrationPage() {
 
             <div className="section-reg__sub-text">
                 <p><small className="text-gray">Уже есть аккаунт?</small></p>
-                <Link to="/login" className="text-link small">Войди!</Link>
+                <Link to={"/login"} className="text-link small">Войди!</Link>
             </div>
         </article>
     )

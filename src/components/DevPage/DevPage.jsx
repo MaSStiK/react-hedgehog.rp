@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useContext } from "react"
 import { Link } from "react-router-dom"
 import CustomInput from "../CustomInput/CustomInput"
-import Aside from "../aside/Aside"
+import Aside from "../Aside/Aside"
 import { DataContext } from "../Context"
 import imgSearch from "../../assets/icons/Search.svg"
 import imgPrivate from "../../assets/icons/Private.svg"
@@ -38,7 +38,7 @@ export default function DevPage() {
             <Aside />
             
             <article id="article-dev">
-                <h4 className="page-title text-dark">/dev</h4>
+                <h4 className="page-title text-dark">/ dev</h4>
 
                 <section className="dev-block">
                     <h1>Never gonna give you up</h1>
@@ -56,7 +56,7 @@ export default function DevPage() {
                     <button className="red">red (cancel)</button>
                     <button className="tp">tp (transparent)</button>
                     <button disabled>disabled</button>
-                    <Link to="#" className="text-link">Текст-ссылка по которой можно куда то попасть</Link>
+                    <Link to={"#"} className="text-link">Текст-ссылка по которой можно куда то попасть</Link>
 
                     <div style={{display: "flex", gap: "12px"}}>
                         <button className="button-icon">

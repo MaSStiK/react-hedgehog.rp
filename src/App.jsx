@@ -18,9 +18,14 @@ import Registration from "./components/RegistrationPage/RegistrationPage";
 import Home from "./components/HomePage/HomePage";
 import User from "./components/UserPage/UserPage";
 import Users from "./components/UsersPage/UsersPage";
-import NotFound from "./components/NotFoundPage/NotFoundPage";
+import Country from "./components/CountryPage/CountryPage";
+import Countries from "./components/CountriesPage/CountriesPage";
+import CountryEdit from "./components/CountryEditPage/CountryEditPage";
+import Tools from "./components/ToolsPage/ToolsPage";
 
 import Dev from "./components/DevPage/DevPage";
+
+import NotFound from "./components/NotFoundPage/NotFoundPage";
 
 
 
@@ -47,17 +52,18 @@ export default function App() {
     useEffect(() => {
         // Анимация загрузки страницы
         setPageLoading()
-
-        // После загрузки приложения делаем проверку токена, если он изменился - требуем залогинится заного
-        if (Context.userData) {
-            try {
+        try {
+            // После загрузки приложения делаем проверку токена, если он изменился - требуем залогинится заного
+            if (Context.userData) {
                 GSAPI("authorize", {token: Context.userData.token}, (data) => {
                     console.log("GSAPI: authorize");
+
                     if (data.success) { // Если все успешно
                         let newUserData = {...data.data}
                         newUserData.token = Context.userData.token
                         localStorage.userData = JSON.stringify(newUserData)
                         setContextUserData(newUserData)
+                        setPageLoading(false)
                         return
                     }
 
@@ -65,18 +71,9 @@ export default function App() {
                     delete Context.userData
                     Navigate("/login")
                 })
-            } catch(error) {
-                // Если произошла какая то ошибка, то удаляем юзердату и требуем залогинится заного
-                delete localStorage.userData
-                delete Context.userData
-                alert(`Произошла непредвиденная ошибка:\n${error}`)
-                Navigate("/login")
-                return
             }
-        }
 
-        // Загрузка всех юзеров
-        try {
+            // Загрузка всех юзеров
             GSAPI("GETusers", {}, (data) => {
                 console.log("GSAPI: users received");
         
@@ -90,14 +87,20 @@ export default function App() {
                     }
                     return 0;
                 })
-    
+
                 // После получения всех юзеров обновляем список в контексте
                 setContextUsers(usersSorted)
-                setPageLoading(false)
             })
-        } catch {
+        } catch(error) {
             // Если вдруг произошла ошибка - останавливаем загрузку
             setPageLoading(false)
+
+            // Если произошла какая то ошибка, то удаляем юзердату и требуем залогинится заного
+            delete localStorage.userData
+            delete Context.userData
+            alert(`Произошла непредвиденная ошибка:\n${error}`)
+            Navigate("/login")
+            return
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -113,10 +116,13 @@ export default function App() {
                 <Route path="/news" element={<NotFound />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id" element={<User />} />
-                <Route path="/countries" element={<NotFound />} />
+                {/* <Route path="/users/edit" element={<UserEdit />} /> */}
+                <Route path="/countries" element={<Countries />} />
+                <Route path="/countries/:id" element={<Country />} />
+                <Route path="/countries/edit" element={<CountryEdit />} />
                 <Route path="/nations" element={<NotFound />} />
 
-                <Route path="/tools" element={<NotFound />} />
+                <Route path="/tools" element={<Tools />} />
                 <Route path="/help" element={<NotFound />} />
                 <Route path="/about" element={<NotFound />} />
 

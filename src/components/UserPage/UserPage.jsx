@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { DataContext } from "../Context"
 import CustomButton from "../CustomButton/CustomButton"
-import Aside from "../aside/Aside"
+import Aside from "../Aside/Aside"
 import imgBasePhoto from "../../assets/replace/base-photo-empty.png"
 import { VKAPI } from '../VK-API'
 
@@ -58,9 +58,12 @@ export default function UserPage() {
     }, [[], Context.users])
 
     useEffect(() => {
-        console.log("VKAPI: user received");
+        console.log("VKAPI: users.get");
+
         // Находим информацию о пользователе в вк при изменении id поиска
         VKAPI('users.get', {user_id: URLparams.id, fields: "photo_200"}, (vkData) => {
+            console.log("VKAPI: user received");
+
             if (vkData.response.length) {
                 vkData = vkData.response[0]
                 setuserDataVk({
@@ -113,7 +116,7 @@ export default function UserPage() {
                     // Если пользователь не найден, будет показан только когда будет ошибка
                     : <section className={`user-profile ${!userNotFound ? "hidden" : null}`}>
                         <h2>Участник не найден!</h2>
-                        <Link to="/users">
+                        <Link to={"/users"}>
                             <button>К списку участников</button>
                         </Link>
                     </section>

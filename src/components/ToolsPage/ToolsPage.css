@@ -1,11 +1,11 @@
-#article-users {
+#article-tools {
     display: flex;
     flex-direction: column;
     gap: var(--article-gap);
 }
 
-.section-users {
+.section-tools__column {
     display: flex;
     flex-direction: column;
-    gap: var(--block-gap);
+    gap: var(--article-gap);
 }

@@ -167,7 +167,7 @@ export default function LoginPage() {
 
             <div className="section-login__sub-text">
                 <p><small className="text-gray">Нету аккаунта?</small></p>
-                <Link to="/registration" className="text-link small">Зарегистрируйся!</Link>
+                <Link to={"/registration"} className="text-link small">Зарегистрируйся!</Link>
             </div>
         </article>
     )

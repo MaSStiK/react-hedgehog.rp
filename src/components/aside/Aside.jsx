@@ -13,7 +13,6 @@ export default function Aside() {
     const Navigate = useNavigate()
     const Context = useContext(DataContext)
 
-
     const [hideNavMenu, sethideNavMenu] = useState(true);
 
     const handleShowNavMenu = () => {
@@ -68,7 +67,7 @@ export default function Aside() {
                                     onClick={() => {Navigate("/users/" + Context.userData.id)}} 
                                     style={{marginBottom: "var(--block-gap)"}}
                                   />
-                                : <Link to="/login">
+                                : <Link to={"/login"}>
                                     <button className="green">Авторизация</button>
                                   </Link>
                             }
@@ -79,10 +78,11 @@ export default function Aside() {
                                 {Object.keys(Context.userData.country).length // Если страны нету - рендерим кнопку для создания страны
                                     ? <CustomButton
                                         src={Context.userData.photo}
-                                        text={Context.userData.name}
-                                        subText={"@" + Context.userData.id} 
+                                        text={Context.userData.country.name}
+                                        subText={Context.userData.country.tag}
+                                        onClick={() => {Navigate("/countries/" + Context.userData.id)}} 
                                       />
-                                    : <Link to="/login">
+                                    : <Link to={"/countries/edit"}>
                                         <button className="green">Моя страна</button>
                                       </Link>
                                 }
@@ -91,23 +91,22 @@ export default function Aside() {
 
                         <div className="nav-divider"></div>
 
-                        <li><NavLink to="/">Главная</NavLink></li>
-                        <li><NavLink to="/news">Новости</NavLink></li>
-                        <li><NavLink to="/users">Участники</NavLink></li>
-                        <li><NavLink to="/countries">Страны</NavLink></li>
-                        <li><NavLink to="/nations">Нации</NavLink></li>
+                        <li><NavLink to={"/"}>Главная</NavLink></li>
+                        <li><NavLink to={"/news"}>Новости</NavLink></li>
+                        <li><NavLink to={"/users"}>Участники</NavLink></li>
+                        <li><NavLink to={"/countries"}>Страны</NavLink></li>
+                        <li><NavLink to={"/nations"}>Нации</NavLink></li>
 
-                        <div className="nav-divider"></div>
+                        <div className={"nav-divider"}></div>
 
-                        <li><NavLink to="/tools">Инструменты</NavLink></li>
-                        <li><NavLink to="/help">Помощь</NavLink></li>
-                        <li><NavLink to="/about">О нас</NavLink></li>
-
+                        <li><NavLink to={"/tools"}>Инструменты</NavLink></li>
+                        <li><NavLink to={"/help"}>Помощь</NavLink></li>
+                        <li><NavLink to={"/about"}>О нас</NavLink></li>
 
                         {Context.isAdmin
                             ? <>
                                 <div className="nav-divider"></div>
-                                <li><NavLink to="/dev">dev</NavLink></li>
+                                <li><NavLink to={"/dev"}>dev</NavLink></li>
                               </>
                             : null
                         }

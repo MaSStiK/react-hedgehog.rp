@@ -1,0 +1,22 @@
+#article-country-edit {
+    display: flex;
+    flex-direction: column;
+    gap: var(--article-gap);
+}
+
+.section-country-edit {
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-gap);
+}
+
+.section-country-edit form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-gap);
+}
+
+.section-country-edit form small {
+    width: 100%;
+    text-align: left;
+}

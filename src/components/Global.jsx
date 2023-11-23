@@ -5,9 +5,16 @@ export const CONSTS = {
     loginMax: 32,
     passwordMin: 8,
     passwordMax: 32,
-    nameMin: 1,
-    nameMax: 64,
-    maxBio: 1000,
+
+    userNameMin: 1,
+    userNameMax: 64,
+    userBioMax: 1000,
+    userPhotoMax: 1000,
+
+    countryTitleMin: 1,
+    countryTitleMax: 128,
+    countryBioMax: 5000,
+    countryPhotoMax: 1000,
 }
 
 // Получить переменные из ссылки

@@ -1,10 +1,10 @@
-#article-users {
+#article-country {
     display: flex;
     flex-direction: column;
     gap: var(--article-gap);
 }
 
-.section-users {
+.section-country {
     display: flex;
     flex-direction: column;
     gap: var(--block-gap);
