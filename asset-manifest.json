@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/react-hedgehog.rp/static/css/main.6fb91250.css",
-    "main.js": "/react-hedgehog.rp/static/js/main.3b72f122.js",
+    "main.js": "/react-hedgehog.rp/static/js/main.5333b644.js",
     "static/js/787.d5bebfb5.chunk.js": "/react-hedgehog.rp/static/js/787.d5bebfb5.chunk.js",
     "static/media/waiting.gif": "/react-hedgehog.rp/static/media/waiting.3fb26d9b3c3c823ae786.gif",
     "index.html": "/react-hedgehog.rp/index.html",
@@ -14,11 +14,11 @@
     "static/media/Close.svg": "/react-hedgehog.rp/static/media/Close.437f928fae128032d2f76eb2241bc89e.svg",
     "static/media/Search.svg": "/react-hedgehog.rp/static/media/Search.df6bc24ea6354b17a5b8577dc9c555b9.svg",
     "main.6fb91250.css.map": "/react-hedgehog.rp/static/css/main.6fb91250.css.map",
-    "main.3b72f122.js.map": "/react-hedgehog.rp/static/js/main.3b72f122.js.map",
+    "main.5333b644.js.map": "/react-hedgehog.rp/static/js/main.5333b644.js.map",
     "787.d5bebfb5.chunk.js.map": "/react-hedgehog.rp/static/js/787.d5bebfb5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6fb91250.css",
-    "static/js/main.3b72f122.js"
+    "static/js/main.5333b644.js"
   ]
 }
