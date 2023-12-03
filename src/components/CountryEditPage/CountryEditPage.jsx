@@ -1,5 +1,5 @@
-import { useEffect, useContext, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useContext, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { DataContext } from "../Context"
 import CustomInput from "../CustomInput/CustomInput"
 import Aside from "../Aside/Aside"
@@ -125,6 +125,15 @@ export default function CountryEditPage() {
             return
         }
 
+        // Проверка наличия запрещенных символов
+        try {
+            btoa(formTag)
+        } catch {
+            seterrorText(`Тег содержит запрещенные символы`)
+            settagInputError(true)
+            return
+        }
+
         // Если тег пустой - ставим по умолчанию
         if (!formTag) {
             formTag = "@c" + Context.userData.id
@@ -173,8 +182,8 @@ export default function CountryEditPage() {
             country_id: "c" + Context.userData.id, // Уникальный id страны
             country_tag: formTag, // Тег для упрощенного поиска
             country_title: formTitle, // Отображаемое название страны
-            country_bio_main: formBioMain, // Описание страны
-            country_bio_more: formBioMore, // Описание страны
+            // country_bio_main: formBioMain, // Описание страны
+            // country_bio_more: formBioMore, // Описание страны
             country_photo: formPhoto, // Флаг страны
         }
 
@@ -183,11 +192,11 @@ export default function CountryEditPage() {
 
             // Если тег уникальный
             if (data.success) {
-                GSAPI("PUTcountryBioMain", {token: Context.userData.token, country_bio_main: newCountryData.country_bio_main}, (data) => {
+                GSAPI("PUTcountryBioMain", {token: Context.userData.token, country_bio_main: formBioMain}, (data) => {
                     console.log("GSAPI: PUTcountryBioMain");
 
                     if (data.success) {
-                        GSAPI("PUTcountryBioMore", {token: Context.userData.token, country_bio_more: newCountryData.country_bio_more}, (data) => {
+                        GSAPI("PUTcountryBioMore", {token: Context.userData.token, country_bio_more: formBioMore}, (data) => {
                             console.log("GSAPI: PUTcountryBioMore");
 
                             if (data.success) {
@@ -195,8 +204,8 @@ export default function CountryEditPage() {
                                 newUserData.country_id = newCountryData.country_id
                                 newUserData.country_tag = newCountryData.country_tag
                                 newUserData.country_title = newCountryData.country_title
-                                newUserData.country_bio_main = newCountryData.country_bio_main
-                                newUserData.country_bio_more = newCountryData.country_bio_more
+                                newUserData.country_bio_main = formBioMain
+                                newUserData.country_bio_more = formBioMore
                                 newUserData.country_photo = newCountryData.country_photo
 
                                 localStorage.userData = JSON.stringify(newUserData)

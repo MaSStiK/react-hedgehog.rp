@@ -1,10 +1,10 @@
-import { useState, useEffect, useContext } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useContext } from "react"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import { DataContext } from "../Context"
 import CustomButton from "../CustomButton/CustomButton"
 import Aside from "../Aside/Aside"
 import imgBasePhoto from "../../assets/replace/base-photo-empty.png"
-import { VKAPI } from '../VK-API'
+import { VKAPI } from "../VK-API"
 
 import "./UserPage.css"
 import "./UserPage-phone.css"
@@ -61,7 +61,7 @@ export default function UserPage() {
         console.log("VKAPI: users.get");
 
         // Находим информацию о пользователе в вк при изменении id поиска
-        VKAPI('users.get', {user_id: URLparams.id, fields: "photo_200"}, (vkData) => {
+        VKAPI("users.get", {user_id: URLparams.id, fields: "photo_200"}, (vkData) => {
             console.log("VKAPI: user received");
 
             if (vkData.response.length) {

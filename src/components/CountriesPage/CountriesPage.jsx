@@ -1,5 +1,5 @@
-import { useEffect, useContext, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useContext, useRef, useState } from "react"
+import { Link } from "react-router-dom"
 import { DataContext } from "../Context"
 import CustomInput from "../CustomInput/CustomInput"
 import CustomButton from "../CustomButton/CustomButton"
@@ -11,28 +11,45 @@ export default function CountriesPage() {
     const Context = useContext(DataContext)
     const searchRef = useRef()
 
-    const [usersRender, setusersRender] = useState([]);
+    const [countriesRender, setcountriesRender] = useState([]);
 
     useEffect(() => {
         document.title = "Все страны | Ежиное-РП"
     }, [])
 
-    // useEffect(() => {
-    //     // При обновлении контекста так же обновляется и массив
-    //     setusersRender(Context.users)
-    //     searchUsers()
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [Context.users])
+    function getCountries(data) {
+        let countries = []
+        for (let user of data) {
+            if (user.country_id !== "") {
+                countries.push({
+                    country_id: user.country_id,
+                    country_tag: user.country_tag,
+                    country_title: user.country_title,
+                    country_photo: user.country_photo,
+                    // country_bio_main: user.country_bio_main,
+                    // country_bio_more: user.country_bio_more,
+                })
+            }
+        }
+        return countries
+    }
+
+    useEffect(() => {
+        // При обновлении контекста так же обновляется и массив
+        setcountriesRender(getCountries(Context.users))
+        searchCountries()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [Context.users])
     
-    // const searchUsers = () => {
-    //     let filteredUsers = Context.users.filter(
-    //         // Если есть поисковая строка в имени юзера или в теге или в id
-    //         user => user.name.toLowerCase().includes(searchRef.current.value.toLowerCase())
-    //         || user.tag.toLowerCase().includes(searchRef.current.value.toLowerCase())
-    //         || user.id.toLowerCase().includes(searchRef.current.value.toLowerCase())
-    //     )
-    //     setusersRender(filteredUsers)
-    // }
+    const searchCountries = () => {
+        let filteredUsers = getCountries(Context.users).filter(
+            // Если есть поисковая строка в названии страны или в теге или в id
+            country => country.country_title.toLowerCase().includes(searchRef.current.value.toLowerCase())
+            || country.country_tag.toLowerCase().includes(searchRef.current.value.toLowerCase())
+            || country.country_id.toLowerCase().includes(searchRef.current.value.toLowerCase())
+        )
+        setcountriesRender(filteredUsers)
+    }
 
     return (
         <>
@@ -43,17 +60,17 @@ export default function CountriesPage() {
 
                 <section className="section-countries">
                     <CustomInput label="Поиск страны">
-                        <input type="text" ref={searchRef} required />
+                        <input type="text" ref={searchRef} onInput={searchCountries} required />
                     </CustomInput>
-                    {/* {usersRender.map((user) => (
-                        <Link to={"/users/" + user.id} key={user.id}>
+                    {countriesRender.map((country) => (
+                        <Link to={"/countries/" + country.country_id} key={country.country_id}>
                             <CustomButton
-                                src={user.photo}
-                                text={user.name}
-                                subText={user.tag} 
+                                src={country.country_photo}
+                                text={country.country_title}
+                                subText={country.country_tag} 
                             />
                         </Link>
-                    ))} */}
+                    ))}
                 </section>
             </article>
         </>

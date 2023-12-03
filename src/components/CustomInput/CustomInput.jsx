@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import $ from 'jquery'
+import { useState } from "react"
+import $ from "jquery"
 import imgEyeOpen from "../../assets/icons/EyeOpen.svg"
 import imgEyeClosed from "../../assets/icons/EyeClosed.svg"
 

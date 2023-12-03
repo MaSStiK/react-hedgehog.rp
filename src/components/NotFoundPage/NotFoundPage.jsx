@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect } from "react"
 import Aside from "../Aside/Aside"
 
 import "./NotFoundPage.css"

@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from "jquery";
 
 
 // Ссылка для обращение к api
@@ -27,7 +27,7 @@ export function GSAPI(action, data={}, func) {
 //         crossDomain: true,
 //         url: GoogleSheetURL + "?action=GETlogin",
 //         method: "GET",
-//         dataType: 'JSONP',
+//         dataType: "JSONP",
 //         data: {
 //             token: token
 //         },

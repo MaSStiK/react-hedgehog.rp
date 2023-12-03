@@ -1,12 +1,12 @@
-import $ from 'jquery';
+import $ from "jquery";
 
 const idkWhatIsThis = "dmsxLmEuZUNtcTRRaWt4RXM4TjZwVGpReEtZZFpEdDhTVEZqckNiaHlSWE16LVVPckFTUUxBUzhQck5JU0dQMWRZRHB5NHFPd1dhUXB0clkteVU4eXdZNTRXRDkzY3ZmdXRIbkpQQ0x3RG0yRmRTWUJFeUx1dkphQ3d2ajVjdnJ2WUl6eFFZdUZYVlFpSVI0VmxtQ0lYQTVRZGxpYnBnVEswS1ViVDU4d29JRVU4Y1R0OWNkU3VfZXp6TG9JczJhX2xhQm9Sc1RfRXVOYXhna25ZT2RoOWVLNzd6UQ=="
 
 // Получить ссылку на метод
 function getMethodUrl(method, params, token) {
     params = params || {}
-    params['access_token'] = atob(token)
-    params['v'] = "5.131"
+    params["access_token"] = atob(token)
+    params["v"] = "5.131"
     return "https://api.vk.com/method/" + method + "?" + $.param(params)
 }
 
@@ -15,8 +15,8 @@ function getMethodUrl(method, params, token) {
 export function VKAPI(method, params, func=null, token=idkWhatIsThis) {
     $.ajax({
         url: getMethodUrl(method, params, token),
-        method: 'GET',
-        dataType: 'JSONP',
+        method: "GET",
+        dataType: "JSONP",
         success: func,
     })
 }
@@ -33,7 +33,7 @@ export function VKAPI(method, params, func=null, token=idkWhatIsThis) {
 
 // // Метод отправки сообщения
 // export function VKsendMessage(peer_id, message, func=null) {
-//     VKsendRequest('messages.send', {peer_id: peer_id, random_id: 0, message: message}, 
+//     VKsendRequest("messages.send", {peer_id: peer_id, random_id: 0, message: message}, 
 //         (data) => {
 //             if (func) {
 //                 func(data.response)
