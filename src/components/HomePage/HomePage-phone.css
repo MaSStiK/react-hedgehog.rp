@@ -1,0 +1,6 @@
+/* Контент в 100% */
+@media screen and (max-width: 840px) {
+    iframe {
+        width: 100%;
+    }
+}

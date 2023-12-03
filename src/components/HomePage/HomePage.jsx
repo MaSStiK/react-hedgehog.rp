@@ -4,6 +4,8 @@ import { DataContext } from "../Context"
 import Aside from "../Aside/Aside"
 
 import "./HomePage.css"
+import "./HomePage-phone.css"
+
 
 export default function HomePage() {
     const Navigate = useNavigate()
