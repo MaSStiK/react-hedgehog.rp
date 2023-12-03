@@ -29,7 +29,6 @@ export default function RegistrationPage() {
     const [showPage, setshowPage] = useState(1) // Отображаемая страница
     const [showCopyMessage, setshowCopyMessage] = useState(false) // Спрятать ли сообщение об скопированом коде
 
-    const [showVkFindUserError, setshowVkFindUserError] = useState(false) // Отображать ли ошибку поиска юзера
     const [textVkFindUserError, settextVkFindUserError] = useState("") // Отображать ли ошибку поиска юзера
     const [vkCode, setvkCode] = useState(generateVkCode()) // Создаем ключ для отправки в вк
     const [vkData, setvkData] = useState({}) // Информация о юзере
@@ -45,7 +44,7 @@ export default function RegistrationPage() {
     const firstPageSubmit = () => {
         setshowPage(2)
         setvkData({})
-        setshowVkFindUserError(false)
+        settextVkFindUserError("")
 
         // Получаем все диалоги
         VKAPI("messages.getConversations", {}, (data) => {
@@ -65,7 +64,6 @@ export default function RegistrationPage() {
             // Если не нашел
             if (!vkFindedUserId) {
                 settextVkFindUserError("Сообщение не найдено!")
-                setshowVkFindUserError(true)
                 return
             }
             
@@ -96,27 +94,23 @@ export default function RegistrationPage() {
         GSAPI("POSTuserCheck", {id: vkData.id}, (data) => {
             setPageLoading(false)
 
-            // Если найден id, то ошибка
-            if (!data.success) {
-                setvkData({})
-                settextVkFindUserError("Этот пользователь уже зарегистрирован!")
-                setshowVkFindUserError(true)
+            // Если такого id нету - переходим на последнюю страницу
+            if (data.success) {
+                setshowPage(3)
                 return
             }
 
-            // Если такого id нету - переходим на последнюю страницу
-            setshowPage(3)
+            // Если найден id, то ошибка
+            setvkData({})
+            settextVkFindUserError("Этот пользователь уже зарегистрирован!")
         })
     }
 
-    const [formState, setformState] = useState({
-        errorText: "", // Текст ошибки
-        showErrorText: false, // Спрятать ли ошибку
-        loginInputError: false, // Отображать ли ошибку инпута логина
-        passwordInputError: false, // Отображать ли ошибку инпута пароля
-        passwordAgainInputError: false, // Отображать ли ошибку инпута повтора пароля
-        disableSubmitButton: false // Отключить ли кнопку входа
-    })
+    const [errorText, seterrorText] = useState("") // Текст ошибки
+    const [loginInputError, setloginInputError] = useState(false) // Отображать ли ошибку инпута логина
+    const [passwordInputError, setpasswordInputError] = useState(false)  // Отображать ли ошибку инпута пароля
+    const [passwordAgainInputError, setpasswordAgainInputError] = useState(false) // Отображать ли ошибку повтора пароля
+    const [disableSubmitButton, setdisableSubmitButton] = useState(false) // Отключить ли кнопку входа
 
     const loginInput = useRef()
     const passwordInput = useRef()
@@ -124,12 +118,11 @@ export default function RegistrationPage() {
 
     // При обновлении любого из инпутов
     const handleInputUpdate = () => {
-        setformState({
-            showErrorText: false,
-            loginInputError: false,
-            passwordInputError: false,
-            passwordAgainInputError: false
-        })
+        seterrorText("")
+        setloginInputError(false)
+        setpasswordInputError(false)
+        setpasswordAgainInputError(false)
+
         loginInput.current.value = loginInput.current.value.replaceAll(" ", "_")
         passwordInput.current.value = passwordInput.current.value.replaceAll(" ", "_")
         passwordAgainInput.current.value = passwordAgainInput.current.value.replaceAll(" ", "_")
@@ -140,12 +133,7 @@ export default function RegistrationPage() {
         // Отключение базового перехода
         event.preventDefault()
 
-        setformState({
-            showErrorText: false,
-            loginInputError: false,
-            passwordInputError: false,
-            passwordAgainInputError: false
-        })
+        handleInputUpdate() // Сброс всех ошибок
 
         let formLogin = loginInput.current.value
         let formPassword = passwordInput.current.value
@@ -153,36 +141,29 @@ export default function RegistrationPage() {
 
         // Проверка длины логина
         if (formLogin.length < CONSTS.loginMin || formLogin.length > CONSTS.loginMax) {
-            setformState({
-                errorText: formLogin.length < CONSTS.loginMin
-                    ? `Логин меньше ${CONSTS.loginMin} символов`
-                    : `Логин больше ${CONSTS.loginMax} символов`,
-                showErrorText: true,
-                loginInputError: true
-            })
+            seterrorText(formLogin.length < CONSTS.loginMin
+                ? `Логин меньше ${CONSTS.loginMin} символов`
+                : `Логин больше ${CONSTS.loginMax} символов`
+            )
+            setloginInputError(true)
             return
         }
 
         // Проверка длины пароля
         if (formPassword.length < CONSTS.passwordMin || formPassword.length > CONSTS.passwordMax) {
-            setformState({
-                errorText: formPassword.length < CONSTS.passwordMin
-                    ? `Пароль меньше ${CONSTS.passwordMin} символов`
-                    : `Пароль больше ${CONSTS.passwordMax} символов`,
-                showErrorText: true,
-                passwordInputError: true
-            })
+            seterrorText(formPassword.length < CONSTS.passwordMin
+                ? `Пароль меньше ${CONSTS.passwordMin} символов`
+                : `Пароль больше ${CONSTS.passwordMax} символов`
+            )
+            setpasswordInputError(true)
             return
         }
 
         // Проверка совпадения пароля
         if (formPassword !== formPasswordAgain) {
-            setformState({
-                errorText: "Пароли не совпадают",
-                showErrorText: true,
-                passwordInputError: true,
-                passwordAgainInputError: true
-            })
+            seterrorText("Пароли не совпадают")
+            setpasswordInputError(true)
+            setpasswordAgainInputError(true)
             return
         }
 
@@ -191,13 +172,10 @@ export default function RegistrationPage() {
         try {
             token = btoa(formLogin + " " + formPassword)
         } catch {
-            setformState({
-                errorText: "Введены запрещенные символы",
-                showErrorText: true,
-                loginInputError: true,
-                passwordInputError: true,
-                passwordAgainInputError: true
-            })
+            seterrorText("Введены запрещенные символы")
+            setloginInputError(true)
+            setpasswordInputError(true)
+            setpasswordAgainInputError(true)
             return
         }
 
@@ -222,46 +200,44 @@ export default function RegistrationPage() {
             //     countries: []
             // }), 
             favourite: {}, // Избранные
-            country: {}
+            country_id: "",
+            country_tag: "",
+            country_title: "",
+            country_bio: "",
+            country_photo: ""
         }
 
         // Отключаем кнопку только в случае если прошло все проверки
-        setformState({
-            disableSubmitButton: true,
-        })
+        setdisableSubmitButton(true)
         setPageLoading()
 
         GSAPI("POSTuser", {data: JSON.stringify(newUserData), login: formLogin}, (data) => {
 
-            // Если токен совпал
-            if (!data.success) {
-                setformState({
-                    errorText: "Введенный логин занят",
-                    showErrorText: true,
-                    loginInputError: true,
-                    disableSubmitButton: true
-                })
+            // Если токен уникальный
+            if (data.success) {
+                // Отправляем сообщение в беседу логов
+                let VKAPImessage = `Регистрация пользователя:\nname: ${vkData.name}\nid: ${vkData.id}\nlink: ${"https://vk.com/id" + vkData.id}`
+                VKAPI("messages.send", {peer_id: 2000000007, random_id: 0, message: VKAPImessage}, () => {
 
-                setPageLoading(false)
+                    // Отправляем сообщение пользователю
+                    VKAPImessage = "Вы успешно зарегистрировались!"
+                    VKAPI("messages.send", {peer_id: vkData.id, random_id: 0, message: VKAPImessage}, () => {
+                        setPageLoading(false)
+
+                        // Если успех - сохраняем и открываем главную
+                        localStorage.userData = JSON.stringify(newUserData)
+                        Context.setuserData(newUserData)
+                        // Тут не проверяем на админа, ибо новый админ не создается
+                        Navigate("/home")
+                    })
+                })
                 return
             }
 
-            // Отправляем сообщение в беседу логов
-            let VKAPImessage = `Регистрация пользователя:\nname: ${vkData.name}\nid: ${vkData.id}\nlink: ${"https://vk.com/id" + vkData.id}`
-            VKAPI("messages.send", {peer_id: 2000000007, random_id: 0, message: VKAPImessage}, () => {
-
-                // Отправляем сообщение пользователю
-                VKAPImessage = "Вы успешно зарегистрировались!"
-                VKAPI("messages.send", {peer_id: vkData.id, random_id: 0, message: VKAPImessage}, () => {
-                    setPageLoading(false)
-
-                    // Если успех - сохраняем и открываем главную
-                    localStorage.userData = JSON.stringify(newUserData)
-                    Context.setuserData(newUserData)
-                    // Тут не проверяем на админа, ибо новый админ не создается
-                    Navigate("/home")
-                })
-            })
+            seterrorText("Введенный логин занят")
+            setloginInputError(true)
+            setdisableSubmitButton(false)
+            setPageLoading(false)
         })
     }
 
@@ -306,11 +282,11 @@ export default function RegistrationPage() {
                     }
 
                     {/* Если ошибка */}
-                    {showVkFindUserError &&
-                    <>
-                        <p className="text-red">{textVkFindUserError}</p>
-                        <button onClick={goFirstPage}>Назад</button>
-                    </>
+                    {textVkFindUserError &&
+                        <>
+                            <p className="text-red">{textVkFindUserError}</p>
+                            <button onClick={goFirstPage}>Назад</button>
+                        </>
                     }
                     
                 </div>
@@ -324,44 +300,44 @@ export default function RegistrationPage() {
                             ref={loginInput}
                             type="text"
                             id="form-login"
-                            className={formState.loginInputError ? "error" : null}
+                            className={loginInputError ? "error" : null}
                             maxLength={CONSTS.loginMax}
                             onInput={handleInputUpdate}
                             required
                         />
                     </CustomInput>
 
-                    <small>Без пробелов<br/>Длина логина от {CONSTS.loginMin} до {CONSTS.loginMax} символов<br/>Только латиница и спецсимволы</small>
+                    <small>Без пробелов<br/>Длина логина от {CONSTS.loginMin} до {CONSTS.loginMax} символов<br/>Только латиница, цифры и спецсимволы</small>
 
                     <CustomInput label="Пароль" password={true}>
                         <input
                             ref={passwordInput}
                             type="password"
                             id="form-password"
-                            className={formState.passwordInputError ? "error" : null}
+                            className={passwordInputError ? "error" : null}
                             maxLength={CONSTS.passwordMax}
                             onInput={handleInputUpdate}
                             required
                         />
                     </CustomInput>
 
-                    <small>Без пробелов<br/>Длина пароля от {CONSTS.passwordMin} до {CONSTS.passwordMax} символов<br/>Только латиница и спецсимволы</small>
+                    <small>Без пробелов<br/>Длина пароля от {CONSTS.passwordMin} до {CONSTS.passwordMax} символов<br/>Только латиница, цифры и спецсимволы</small>
 
                     <CustomInput label="Повторите пароль" password={true}>
                         <input
                             ref={passwordAgainInput}
                             type="password"
                             id="form-password-again"
-                            className={formState.passwordAgainInputError ? "error" : null}
+                            className={passwordAgainInputError ? "error" : null}
                             maxLength={CONSTS.passwordMax}
                             onInput={handleInputUpdate}
                             required
                         />
                     </CustomInput>
 
-                    <p className={`text-red ${!formState.showErrorText ? "hidden" : null}`}>{formState.errorText}</p>
+                    <p className={`text-red ${!errorText ? "hidden" : null}`}>{errorText}</p>
 
-                    <button className="green section-reg__button" type="submit" disabled={formState.disableSubmitButton}>Зарегистрироваться</button>
+                    <button className="green section-reg__button" type="submit" disabled={disableSubmitButton}>Зарегистрироваться</button>
                     <button type="button" onClick={() => {setshowPage(2)}}>Назад</button>
                 </form>
             </section>

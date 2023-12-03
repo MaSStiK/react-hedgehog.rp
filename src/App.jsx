@@ -57,25 +57,27 @@ export default function App() {
             if (Context.userData) {
                 GSAPI("authorize", {token: Context.userData.token}, (data) => {
                     console.log("GSAPI: authorize");
+                    setPageLoading(false)
 
-                    if (data.success) { // Если все успешно
+                    // Если все успешно
+                    if (data.success) { 
                         let newUserData = {...data.data}
                         newUserData.token = Context.userData.token
                         localStorage.userData = JSON.stringify(newUserData)
                         setContextUserData(newUserData)
-                        setPageLoading(false)
                         return
                     }
 
                     delete localStorage.userData
                     delete Context.userData
                     Navigate("/login")
+                    window.location.reload()
                 })
             }
 
             // Загрузка всех юзеров
             GSAPI("GETusers", {}, (data) => {
-                console.log("GSAPI: users received");
+                console.log("GSAPI: GETusers");
         
                 // Фильтр юзеров в алфавитном порядке
                 let usersSorted = data.sort((a,b) => {
@@ -90,6 +92,11 @@ export default function App() {
 
                 // После получения всех юзеров обновляем список в контексте
                 setContextUsers(usersSorted)
+
+                // Если нету юзердаты - останавливаем загрузку
+                if (!Context.userData) {
+                    setPageLoading(false)
+                }
             })
         } catch(error) {
             // Если вдруг произошла ошибка - останавливаем загрузку
@@ -116,10 +123,19 @@ export default function App() {
                 <Route path="/news" element={<NotFound />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id" element={<User />} />
-                {/* <Route path="/users/edit" element={<UserEdit />} /> */}
+                {/* <Route path="/users/edit" element={
+                    <ProtectedRoute isAllowed={Context.userData}>
+                        <UserEdit />
+                    </ProtectedRoute>
+                }/> */}
+
                 <Route path="/countries" element={<Countries />} />
                 <Route path="/countries/:id" element={<Country />} />
-                <Route path="/countries/edit" element={<CountryEdit />} />
+                <Route path="/countries/edit" element={
+                    <ProtectedRoute isAllowed={Context.userData}>
+                        <CountryEdit />
+                    </ProtectedRoute>
+                }/>
                 <Route path="/nations" element={<NotFound />} />
 
                 <Route path="/tools" element={<Tools />} />

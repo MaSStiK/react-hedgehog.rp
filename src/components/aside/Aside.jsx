@@ -30,14 +30,13 @@ export default function Aside() {
             </button>
 
             {/* Кнопка профиля в мобильной навигации */}
-            {Context.userData // Если есть юзердата - рендерим мобильную кнопку профиля
-                ? <CustomButton
+            {Context.userData && // Если есть юзердата - рендерим мобильную кнопку профиля
+                <CustomButton
                     id="nav-phone-user"
                     type="tp"
                     src={Context.userData.photo}
                     onClick={() => {Navigate("/users/" + Context.userData.id)}} 
-                  />
-                : null
+                />
             }
 
             {/* Кнопка открытия мобильного меню навигации */}
@@ -75,12 +74,12 @@ export default function Aside() {
                         
                         {Context.userData && // Если есть юзердата - ренлерим кнопку страны
                             <li>
-                                {Object.keys(Context.userData.country).length // Если страны нету - рендерим кнопку для создания страны
+                                {Context.userData.country_id // Если страны нету - рендерим кнопку для создания страны
                                     ? <CustomButton
-                                        src={Context.userData.photo}
-                                        text={Context.userData.country.name}
-                                        subText={Context.userData.country.tag}
-                                        onClick={() => {Navigate("/countries/" + Context.userData.id)}} 
+                                        src={Context.userData.country_photo}
+                                        text={Context.userData.country_title}
+                                        subText={Context.userData.country_tag}
+                                        onClick={() => {Navigate("/countries/" + Context.userData.country_id)}} 
                                       />
                                     : <Link to={"/countries/edit"}>
                                         <button className="green">Моя страна</button>
@@ -103,12 +102,11 @@ export default function Aside() {
                         <li><NavLink to={"/help"}>Помощь</NavLink></li>
                         <li><NavLink to={"/about"}>О нас</NavLink></li>
 
-                        {Context.isAdmin
-                            ? <>
+                        {Context.isAdmin &&
+                            <>
                                 <div className="nav-divider"></div>
                                 <li><NavLink to={"/dev"}>dev</NavLink></li>
-                              </>
-                            : null
+                            </>
                         }
                         
                     </ul>

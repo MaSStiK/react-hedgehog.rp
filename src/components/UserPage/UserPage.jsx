@@ -101,15 +101,13 @@ export default function UserPage() {
                         </Link>
 
                         {/* Если есть описание - отображаем */}
-                        {userData.bio
-                            ? <p className="user-profile__bio">{userData.bio}</p>
-                            : null
+                        {userData.bio &&
+                            <p className="user-profile__bio">{userData.bio}</p>
                         }
 
                         {/* Кнопка выхода если отображается профиль владельда страницы */}
-                        {isSelfRender
-                            ? <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
-                            : null
+                        {isSelfRender &&
+                            <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
                         }
                     </section>
                     

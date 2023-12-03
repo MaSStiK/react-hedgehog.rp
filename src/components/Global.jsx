@@ -13,8 +13,12 @@ export const CONSTS = {
 
     countryTitleMin: 1,
     countryTitleMax: 128,
-    countryBioMax: 5000,
+    countryTagMax: 32,
+    countryBioMainMax: 750,
+    countryBioMoreMax: 750,
     countryPhotoMax: 1000,
+    countryPhotoPxMin: 40,
+    countryPhotoPxMax: 1920,
 }
 
 // Получить переменные из ссылки

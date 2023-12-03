@@ -25,7 +25,9 @@ export default function CountryPage() {
                 <h4 className="page-title text-dark">/ Страна</h4>
 
                 <section className="section-country">
-
+                    <Link to={"/countries/edit"}>
+                        <button className="green">Изменить страну</button>
+                    </Link>
                 </section>
             </article>
         </>

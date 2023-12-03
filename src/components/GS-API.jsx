@@ -10,9 +10,9 @@ const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbwxwsL82NdMpySge
 export function GSAPI(action, data={}, func) {
     $.ajax({
         crossDomain: true,
-        url: GoogleSheetURL + "?action=" + action,
+        url: devGoogleSheetURL + "?action=" + action,
         method: "GET",
-        dataType: 'JSONP',
+        dataType: "JSONP",
         data: data,
         success: func,
     })

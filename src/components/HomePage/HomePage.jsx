@@ -27,13 +27,13 @@ export default function HomePage() {
                     </Link>
 
                     <Link className="section-home-link__wrapper" to="https://www.youtube.com/@hedgehogs_army" target="_blank">
-                        <img src="https://yt3.googleusercontent.com/ytc/APkrFKbaiqa1gHCWFYDqjit1-jvSEpAZwt4eQv_5aDq8=s176-c-k-c0x00ffffff-no-rj" alt="link-youtube" />
+                        <img src="https://sun9-75.userapi.com/impg/InAN-EkKVY2m_b5O35GiDeI1MEJDkpI6a8Rr4A/e6KrwnAUh-w.jpg?size=176x176&quality=96&sign=3c161604cc42ae88ab597906173bff60&type=album" alt="link-youtube" />
                         <h3>Мы в Youtube</h3>
                     </Link>
                 </section>
 
                 <section className="section-home__column">
-                <h2>Последние видео на канале</h2>
+                <h2>Последнее видео на канале</h2>
 
                 <iframe width="526" height="280" src="https://www.youtube.com/embed/niRy4Ygg7_g?si=CY2X1VXnpdn5SiW2" title="YouTube video player" frameBorder="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                     {/* <Link className="section-home-link__wrapper" to="https://www.youtube.com/watch?v=niRy4Ygg7_g" target="_blank">
@@ -42,6 +42,8 @@ export default function HomePage() {
                     </Link> */}
                 </section>
             </article>
+
+            {/* Сделать квадрат с генерируемым текстом из нулей и единиц в буквы ("Скоро") */}
         </>
     )
 }

@@ -11,9 +11,8 @@ export default function CustomButton(props) {
             <img src={props.src} alt="userpic" />
             <div className="custom-button__text">
                 <p className="text-cut">{props.text}</p>
-                {props.subText // Если сабтекст не указан (у страны) - рендерим только основной текст по центру
-                    ? <small className="text-cut text-gray">{props.subText}</small>
-                    : null
+                {props.subText && // Если сабтекст не указан (у страны) - рендерим только основной текст по центру
+                    <small className="text-cut text-gray">{props.subText}</small>
                 }
             </div>
         </button>

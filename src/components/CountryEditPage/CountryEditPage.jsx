@@ -1,80 +1,348 @@
 import { useEffect, useContext, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { DataContext } from "../Context"
 import CustomInput from "../CustomInput/CustomInput"
 import Aside from "../Aside/Aside"
 import { CONSTS, setPageLoading } from "../Global"
+import { GSAPI } from "../GS-API"
 
 
 import "./CountryEditPage.css"
 
 export default function CountryEditPage() {
     const Context = useContext(DataContext)
+    const Navigate = useNavigate()
 
-    const [countryBioLenght, setcountryBioLenght] = useState(0);
-    const [submitButtonActive, setsubmitButtonActive] = useState(false);
+    const [countryBioMainLenght, setcountryBioMainLenght] = useState(0);
+    const [countryBioMoreLenght, setcountryBioMoreLenght] = useState(0);
+    const [countryPhotoPreview, setcountryPhotoPreview] = useState("")
 
-    const countryNameRef = useRef()
-    const countryBioRef = useRef()
+    const [errorText, seterrorText] = useState("") // Текст ошибки
+    const [titleInputError, settitleInputError] = useState(false) // Отображать ли ошибку инпута Названия страны
+    const [tagInputError, settagInputError] = useState(false) // Отображать ли ошибку инпута Названия страны
+    const [bioMainInputError, setbioMainInputError] = useState(false) // Отображать ли ошибку инпута Описания
+    const [bioMoreInputError, setbioMoreInputError] = useState(false) // Отображать ли ошибку инпута Доп Описания
+    const [photoInputError, setphotoInputError] = useState(false) // Отображать ли ошибку инпута Сслыка на фото
+    const [disableSubmitButton, setdisableSubmitButton] = useState(true) // Отключить ли кнопку сохранения
+
+    const basePhotoSrc = "https://sun9-67.userapi.com/impg/X1_O1m3fnSygoDxCy1F0E2XwkkVM3gnJoyq9Ag/zdkh1clrZtk.jpg?size=1200x800&quality=96&sign=a947569cd58dd93b7681dc5c0dbf03dc&type=album"
+
+    const countryTitleRef = useRef()
+    const countryTagRef = useRef()
     const countryPhotoRef = useRef()
+    const countryBioMainRef = useRef()
+    const countryBioMoreRef = useRef()
 
     useEffect(() => {
-        document.title = "Изменение страны | Ежиное-РП"
+        document.title = `${Context.userData.country_id ? "Изменение" : "Создание"} страны | Ежиное-РП`
     }, [])
 
 
-    const handleBioUpdate = () => {
-        setcountryBioLenght(countryBioRef.current.value.length)
+    useEffect(() => {
+        countryTitleRef.current.value = Context.userData.country_title
+        countryTagRef.current.value = Context.userData.country_tag
+
+        countryPhotoRef.current.value = Context.userData.country_photo
+        checkImageSource(countryPhotoRef.current.value) // Обновляем превью картинки
+
+        countryBioMainRef.current.value = Context.userData.country_bio_main.replaceAll("<br>","\n")
+        setcountryBioMainLenght(countryBioMainRef.current.value.length) // Обновляем значение длины описания
+
+        countryBioMoreRef.current.value = Context.userData.country_bio_more.replaceAll("<br>","\n")
+        setcountryBioMoreLenght(countryBioMoreRef.current.value.length) // Обновляем значение длины доп описания
+        
+        handleInputUpdate()
+    }, [Context.userData])
+
+
+    // Проверка существования изображения
+    function checkImageSource(src) {
+        if (src) {
+            const img = new Image();
+            img.src = src;
+            
+            img.onload = () => {
+                if (img.naturalWidth < CONSTS.countryPhotoPxMin // Если картинка больше или меньше заданных значений
+                    || img.naturalHeight < CONSTS.countryPhotoPxMin
+                    || img.naturalWidth > CONSTS.countryPhotoPxMax
+                    || img.naturalHeight > CONSTS.countryPhotoPxMax) {
+                    seterrorText("Не удалось загрузить фотографию")
+                    setcountryPhotoPreview("")
+                    return
+                }
+
+                // Если размер подходит - ставим превью
+                setcountryPhotoPreview(src)
+            }
+
+            img.onerror = () => {
+                seterrorText("Не удалось загрузить фотографию")
+                setcountryPhotoPreview("")
+            }
+        } else {
+            setcountryPhotoPreview("")
+        }
+    }
+
+
+    // При обновлении любого из инпутов
+    const handleInputUpdate = () => {
+        seterrorText("")
+        settitleInputError(false)
+        settagInputError(false)
+        setbioMainInputError(false)
+        setbioMoreInputError(false)
+        setphotoInputError(false)
+        setdisableSubmitButton(countryTitleRef.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в названии страны
+    }
+
+    // Ивент субмит у формы создания/изменения страны
+    function submitForm() {
+        handleInputUpdate() // Сброс всех ошибок
+
+        let formTitle = countryTitleRef.current.value
+        let formTag = countryTagRef.current.value
+        let formPhoto = countryPhotoRef.current.value
+        let formBioMain = countryBioMainRef.current.value
+        let formBioMore = countryBioMoreRef.current.value
+
+
+        // Проверка длины Названия
+        if (formTitle.length < CONSTS.countryTitleMin || formTitle.length > CONSTS.countryTitleMax) {
+            seterrorText(formTitle.length < CONSTS.countryTitleMin
+                ? `Название меньше ${CONSTS.countryTitleMin} символов`
+                : `Название больше ${CONSTS.countryTitleMax} символов`
+            )
+            settitleInputError(true)
+            return
+        }
+
+
+        // Проверка длины тега
+        if (formTag.length > CONSTS.countryTagMax + 1) {
+            seterrorText(`Тег больше ${CONSTS.countryTagMax} символов`)
+            settagInputError(true)
+            return
+        }
+
+        // Если тег пустой - ставим по умолчанию
+        if (!formTag) {
+            formTag = "@c" + Context.userData.id
+        }
+
+
+        // Проверка длины фото
+        if (formPhoto.length > CONSTS.countryPhotoMax) {
+            seterrorText(`Ссылка на фотографию больше ${CONSTS.countryPhotoMax} символов`)
+            setphotoInputError(true)
+            return
+        }
+
+        // Если фото пустое - загружаем стандартное
+        if (!countryPhotoPreview) {
+            formPhoto = basePhotoSrc
+        }
+
+
+        // Проверка длины описания
+        if (formBioMain.length > CONSTS.countryBioMainMax) {
+            seterrorText(`Описание больше ${CONSTS.countryBioMainMax} символов`)
+            setbioMainInputError(true)
+            return
+        }
+
+        formBioMain = formBioMain.replaceAll("\n","<br>")
+
+
+        // Проверка длины доп описания
+        if (formBioMore.length > CONSTS.countryBioMoreMax) {
+            seterrorText(`Доп. описание больше ${CONSTS.countryBioMoreMax} символов`)
+            setbioMoreInputError(true)
+            return
+        }
+
+        formBioMore = formBioMore.replaceAll("\n","<br>")
+
+
+        // Отключаем кнопку только в случае если прошло все проверки
+        setdisableSubmitButton(true)
+        setPageLoading()
+
+         // Данные нового пользователя
+         const newCountryData = {
+            country_id: "c" + Context.userData.id, // Уникальный id страны
+            country_tag: formTag, // Тег для упрощенного поиска
+            country_title: formTitle, // Отображаемое название страны
+            country_bio_main: formBioMain, // Описание страны
+            country_bio_more: formBioMore, // Описание страны
+            country_photo: formPhoto, // Флаг страны
+        }
+
+        GSAPI("PUTcountry", {token: Context.userData.token, data: JSON.stringify(newCountryData)}, (data) => {
+            console.log("GSAPI: PUTcountry");
+
+            // Если тег уникальный
+            if (data.success) {
+                GSAPI("PUTcountryBioMain", {token: Context.userData.token, country_bio_main: newCountryData.country_bio_main}, (data) => {
+                    console.log("GSAPI: PUTcountryBioMain");
+
+                    if (data.success) {
+                        GSAPI("PUTcountryBioMore", {token: Context.userData.token, country_bio_more: newCountryData.country_bio_more}, (data) => {
+                            console.log("GSAPI: PUTcountryBioMore");
+
+                            if (data.success) {
+                                let newUserData = {...Context.userData}
+                                newUserData.country_id = newCountryData.country_id
+                                newUserData.country_tag = newCountryData.country_tag
+                                newUserData.country_title = newCountryData.country_title
+                                newUserData.country_bio_main = newCountryData.country_bio_main
+                                newUserData.country_bio_more = newCountryData.country_bio_more
+                                newUserData.country_photo = newCountryData.country_photo
+
+                                localStorage.userData = JSON.stringify(newUserData)
+                                Context.setuserData(newUserData)
+
+                                setPageLoading(false)
+                                Navigate("/countries/" + newCountryData.country_id)
+                                return
+                            }
+
+                            seterrorText("Не удалось сохранить доп. описание")
+                            setbioMoreInputError(true)
+                            setdisableSubmitButton(false)
+                            setPageLoading(false)
+                        })
+                        return
+                    }
+
+                    seterrorText("Не удалось сохранить описание")
+                    setbioMainInputError(true)
+                    setdisableSubmitButton(false)
+                    setPageLoading(false)
+                })
+                return
+            }
+
+            seterrorText("Введенный тег занят")
+            settagInputError(true)
+            setdisableSubmitButton(false)
+            setPageLoading(false)
+        })
     }
 
     return (
         <>
             <Aside />
-            
+
             <article id="article-country-edit">
                 {/* Добавить изменение надписи на "Создание страны" если страна у юзера пустая */}
-                <h4 className="page-title text-dark">/ Изменение страны</h4>
+                <h4 className="page-title text-dark">{`/ ${Context.userData.country_id ? "Изменение" : "Создание"} страны`}</h4>
 
                 <section className="section-country-edit">
-                    <form>
-                        <CustomInput label="Название страны">
-                            <input
-                                ref={countryNameRef}
-                                type="text"
-                                id="form-title"
-                                maxLength={CONSTS.countryTitleMax}
-                                required
-                            />
-                        </CustomInput>
+                    <CustomInput label="ID Страны">
+                        <input
+                            type="text"
+                            id="form-id"
+                            value={Context.userData.country_id ? Context.userData.country_id : "c" + Context.userData.id}
+                            readOnly
+                            required
+                        />
+                    </CustomInput>
 
-                        <small>Длина названия от {CONSTS.countryTitleMin} до {CONSTS.countryTitleMax} символов</small>
+                    <CustomInput label="Название страны">
+                        <input
+                            ref={countryTitleRef}
+                            type="text"
+                            id="form-title"
+                            className={titleInputError ? "error" : null}
+                            maxLength={CONSTS.countryTitleMax}
+                            onInput={handleInputUpdate}
+                            required
+                        />
+                    </CustomInput>
+                    <small>Длина названия от {CONSTS.countryTitleMin} до {CONSTS.countryTitleMax} символов</small>
 
-                        <CustomInput label={`Описание страны (${countryBioLenght} / 5000)`}>
-                            <textarea
-                                ref={countryBioRef}
-                                id="form-bio"
-                                maxLength={CONSTS.countryBioMax}
-                                onInput={handleBioUpdate}
-                                required 
-                            ></textarea>
-                        </CustomInput>
+                    <CustomInput label="Тег страны">
+                        <input
+                            ref={countryTagRef}
+                            type="text"
+                            id="form-tag"
+                            className={tagInputError ? "error" : null}
+                            maxLength={CONSTS.countryTagMax + 1}
+                            onInput={handleInputUpdate}
+                            onFocus={() => {
+                                // Если при нажатии нету символов - добавляем @ в начало
+                                if (!countryTagRef.current.value) {
+                                    countryTagRef.current.value = "@"
+                                }
+                            }}
+                            onBlur={() => {
+                                // Если остался только символ @ - удаляем его
+                                if (countryTagRef.current.value === "@") {
+                                    countryTagRef.current.value = ""
+                                }
 
-                        <small>Длина описания до {CONSTS.countryBioMax} символов</small>
+                                // Если строка не пустая, но начинается не с @ - добавляем в начало и обрезаем строку
+                                if (countryTagRef.current.value && !countryTagRef.current.value.startsWith("@")) {
+                                    countryTagRef.current.value = "@" + countryTagRef.current.value.slice(0, CONSTS.countryTagMax)
+                                }
+                            }}
+                            required
+                        />
+                    </CustomInput>
+                    <small>Длина тега до {CONSTS.countryTagMax} символов<br />Только латиница, цифры и спецсимволы</small>
 
-                        <CustomInput label="Ссылка на флаг страны">
-                            <input
-                                ref={countryPhotoRef}
-                                type="text"
-                                id="form-photo"
-                                maxLength={CONSTS.countryPhotoMax}
-                                required
-                            />
-                        </CustomInput>
+                    <CustomInput label="Ссылка на флаг страны">
+                        <input
+                            ref={countryPhotoRef}
+                            type="text"
+                            id="form-photo"
+                            className={photoInputError ? "error" : null}
+                            maxLength={CONSTS.countryPhotoMax}
+                            onInput={() => {
+                                checkImageSource(countryPhotoRef.current.value) // Проверяем фотографию
+                                handleInputUpdate() // Так же тригирим апдейт всех полей
+                            }}
+                            required
+                        />
+                    </CustomInput>
 
-                        {/* <p className={`text-red ${!formState.showErrorText ? "hidden" : null}`}>{formState.errorText}</p> */}
+                    <small>Длина ссылки до {CONSTS.countryPhotoMax} символов<br />Размер изображения от {CONSTS.countryPhotoPxMin}px/{CONSTS.countryPhotoPxMin}px до {CONSTS.countryPhotoPxMax}px/{CONSTS.countryPhotoPxMax}px<br />Замена на стандартное изображение если поле пустое</small>
+                    <img src={countryPhotoPreview} alt="preview" className={countryPhotoPreview ? null : "hidden"} />
+                    
+                    <CustomInput label={`Описание страны (${countryBioMainLenght} / ${CONSTS.countryBioMainMax})`}>
+                        <textarea
+                            ref={countryBioMainRef}
+                            id="form-bio"
+                            className={bioMainInputError ? "error" : null}
+                            maxLength={CONSTS.countryBioMainMax}
+                            onInput={() => {
+                                setcountryBioMainLenght(countryBioMainRef.current.value.length) // Обновляем значение длины описания
+                                handleInputUpdate() // Так же тригирим апдейт всех полей
+                            }}
+                            required 
+                        ></textarea>
+                    </CustomInput>
+                    <small>Длина описания до {CONSTS.countryBioMainMax} символов</small>
 
-                        <button type="submit" disabled={!submitButtonActive} className="green">Сохранить</button>
-                    </form>
+                    <CustomInput label={`Доп. описание (${countryBioMoreLenght} / ${CONSTS.countryBioMoreMax})`}>
+                        <textarea
+                            ref={countryBioMoreRef}
+                            id="form-bio"
+                            className={bioMoreInputError ? "error" : null}
+                            maxLength={CONSTS.countryBioMoreMax}
+                            onInput={() => {
+                                setcountryBioMoreLenght(countryBioMoreRef.current.value.length) // Обновляем значение длины описания
+                                handleInputUpdate() // Так же тригирим апдейт всех полей
+                            }}
+                            required 
+                        ></textarea>
+                    </CustomInput>
+                    <small>Доп. описание до {CONSTS.countryBioMoreMax} символов</small>
+
+                    <p className={`text-red ${!errorText ? "hidden" : null}`}>{errorText}</p>
+
+                    <button onClick={submitForm} disabled={disableSubmitButton} className="green">Сохранить</button>
                 </section>
             </article>
         </>

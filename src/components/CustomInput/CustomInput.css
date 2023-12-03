@@ -122,6 +122,16 @@ input:-webkit-autofill:focus {
 }
 
 
+/* Стиль для ошибки */
+.custom-input-wrapper textarea.error:not(:read-only) {
+    border: 1px solid var(--border-input-error);
+}
+
+.custom-input-wrapper textarea.error:not(:read-only) ~ label {
+    color: var(--border-input-error);
+}
+
+
 /* Инпут с паролем */
 .custom-input-password input {
     padding-right: 44px; /* 32px + 12px */
