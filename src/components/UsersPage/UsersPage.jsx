@@ -13,19 +13,26 @@ export default function UsersPage() {
 
     const [usersRender, setusersRender] = useState([]);
 
+    // Фильтр юзеров в алфавитном порядке
+    function sortUsers(data) {
+        return data.sort((a, b) => {
+            return a.name.localeCompare(b.name)
+        })
+    }
+
     useEffect(() => {
         document.title = "Все участники | Ежиное-РП"
     }, [])
 
     useEffect(() => {
         // При обновлении контекста так же обновляется и массив
-        setusersRender(Context.users)
+        setusersRender(sortUsers(Context.users))
         searchUsers()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Context.users])
     
     const searchUsers = () => {
-        let filteredUsers = Context.users.filter(
+        let filteredUsers = sortUsers(Context.users).filter(
             // Если есть поисковая строка в имени юзера или в теге или в id
             user => user.name.toLowerCase().includes(searchRef.current.value.toLowerCase())
             || user.tag.toLowerCase().includes(searchRef.current.value.toLowerCase())

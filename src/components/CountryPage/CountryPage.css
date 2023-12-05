@@ -4,8 +4,62 @@
     gap: var(--article-gap);
 }
 
-.section-country {
+.country-profile {
     display: flex;
     flex-direction: column;
     gap: var(--block-gap);
+}
+
+.country-profile__top {
+    display: flex;
+    height: 100px;
+    gap: var(--block-gap);
+}
+
+.country-profile__top-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--block-gap);
+}
+
+.country-profile__top-name h2 {
+    max-height: 58px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.country-profile__top-tag {
+    cursor: pointer;
+}
+
+.country-profile__top-photo {
+    height: 100px;
+}
+
+.country-profile__top-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    
+    background-color: var(--bg-primary);
+    object-fit: cover;
+}
+
+/* Описание - текст стилизованный под текстареа */
+.country-profile__bio {
+    width: 100%;
+    padding: 8px;
+    display: block;
+
+    color: var(--text-white);
+    font-size: var(--p-size);
+    text-decoration: none;
+
+    outline: none;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-input);
+    border-radius: 4px;
+
+    white-space: pre-wrap;
 }

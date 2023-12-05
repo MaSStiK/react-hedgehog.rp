@@ -17,6 +17,13 @@ export default function CountriesPage() {
         document.title = "Все страны | Ежиное-РП"
     }, [])
 
+    // Фильтр стран в алфавитном порядке
+    function sortCountries(data) {
+        return data.sort((a, b) => {
+            return a.country_title.localeCompare(b.country_title)
+        })
+    }
+
     function getCountries(data) {
         let countries = []
         for (let user of data) {
@@ -36,13 +43,13 @@ export default function CountriesPage() {
 
     useEffect(() => {
         // При обновлении контекста так же обновляется и массив
-        setcountriesRender(getCountries(Context.users))
+        setcountriesRender(sortCountries(getCountries(Context.users)))
         searchCountries()
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Context.users])
     
     const searchCountries = () => {
-        let filteredUsers = getCountries(Context.users).filter(
+        let filteredUsers = sortCountries(getCountries(Context.users)).filter(
             // Если есть поисковая строка в названии страны или в теге или в id
             country => country.country_title.toLowerCase().includes(searchRef.current.value.toLowerCase())
             || country.country_tag.toLowerCase().includes(searchRef.current.value.toLowerCase())

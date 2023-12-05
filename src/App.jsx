@@ -78,20 +78,9 @@ export default function App() {
             // Загрузка всех юзеров
             GSAPI("GETusers", {}, (data) => {
                 console.log("GSAPI: GETusers");
-        
-                // Фильтр юзеров в алфавитном порядке
-                let usersSorted = data.sort((a,b) => {
-                    if (a.name < b.name) {
-                        return -1;
-                    }
-                    if (a.name > b.name) {
-                        return 1;
-                    }
-                    return 0;
-                })
 
                 // После получения всех юзеров обновляем список в контексте
-                setContextUsers(usersSorted)
+                setContextUsers(data)
 
                 // Если нету юзердаты - останавливаем загрузку
                 if (!Context.userData) {
@@ -139,6 +128,8 @@ export default function App() {
                 <Route path="/nations" element={<NotFound />} />
 
                 <Route path="/tools" element={<Tools />} />
+                <Route path="/tools/exit" element={<Tools doExit={true} />} />
+
                 <Route path="/help" element={<NotFound />} />
                 <Route path="/about" element={<NotFound />} />
 

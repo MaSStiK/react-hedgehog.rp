@@ -5,7 +5,7 @@ import Aside from "../Aside/Aside"
 
 import "./ToolsPage.css"
 
-export default function ToolsPage() {
+export default function ToolsPage(props) {
     const Navigate = useNavigate()
     const Context = useContext(DataContext)
 
@@ -14,12 +14,16 @@ export default function ToolsPage() {
     })
 
     const handleExitProfile = () => {
-        delete localStorage.userData
-        delete Context.userData
+        localStorage.clear()
         Navigate("/")
         window.location.reload()
     }
 
+    useEffect(() => {
+        if (props.doExit) {
+            handleExitProfile()
+        }
+    }, [window.location.href])
 
     return (
         <>
@@ -29,7 +33,9 @@ export default function ToolsPage() {
                 <h4 className="page-title text-dark">/ Инструменты</h4>
 
                 <section className="section-tools__column">
-                    <h2>Запасной выход из профиля</h2>
+                    <h2>Запасной выход из профиля <br /><p>(Удаление всего хеша)</p></h2>
+                    <p>Ссылка на функцию <br /><Link to={"exit"} className="text-link">{window.location.href + "/exit"}</Link></p>
+
                     <button className="red" onClick={handleExitProfile}>Выход из профиля</button>
                 </section>
             </article>

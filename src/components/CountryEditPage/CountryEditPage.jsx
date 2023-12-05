@@ -27,11 +27,11 @@ export default function CountryEditPage() {
 
     const basePhotoSrc = "https://sun9-67.userapi.com/impg/X1_O1m3fnSygoDxCy1F0E2XwkkVM3gnJoyq9Ag/zdkh1clrZtk.jpg?size=1200x800&quality=96&sign=a947569cd58dd93b7681dc5c0dbf03dc&type=album"
 
-    const countryTitleRef = useRef()
-    const countryTagRef = useRef()
-    const countryPhotoRef = useRef()
-    const countryBioMainRef = useRef()
-    const countryBioMoreRef = useRef()
+    const countryTitleInput = useRef()
+    const countryTagInput = useRef()
+    const countryPhotoInput = useRef()
+    const countryBioMainInput = useRef()
+    const countryBioMoreInput = useRef()
 
     useEffect(() => {
         document.title = `${Context.userData.country_id ? "Изменение" : "Создание"} страны | Ежиное-РП`
@@ -39,17 +39,19 @@ export default function CountryEditPage() {
 
 
     useEffect(() => {
-        countryTitleRef.current.value = Context.userData.country_title
-        countryTagRef.current.value = Context.userData.country_tag
+        countryTitleInput.current.value = Context.userData.country_title
+        countryTagInput.current.value = Context.userData.country_tag
 
-        countryPhotoRef.current.value = Context.userData.country_photo
-        checkImageSource(countryPhotoRef.current.value) // Обновляем превью картинки
+        countryPhotoInput.current.value = Context.userData.country_photo
+        checkImageSource(countryPhotoInput.current.value) // Обновляем превью картинки
 
-        countryBioMainRef.current.value = Context.userData.country_bio_main.replaceAll("<br>","\n")
-        setcountryBioMainLenght(countryBioMainRef.current.value.length) // Обновляем значение длины описания
+        // countryBioMainInput.current.value = Context.userData.country_bio_main.replaceAll("<br>","\n")
+        countryBioMainInput.current.value = Context.userData.country_bio_main
+        setcountryBioMainLenght(countryBioMainInput.current.value.length) // Обновляем значение длины описания
 
-        countryBioMoreRef.current.value = Context.userData.country_bio_more.replaceAll("<br>","\n")
-        setcountryBioMoreLenght(countryBioMoreRef.current.value.length) // Обновляем значение длины доп описания
+        // countryBioMoreInput.current.value = Context.userData.country_bio_more.replaceAll("<br>","\n")
+        countryBioMoreInput.current.value = Context.userData.country_bio_more
+        setcountryBioMoreLenght(countryBioMoreInput.current.value.length) // Обновляем значение длины доп описания
         
         handleInputUpdate()
     }, [Context.userData])
@@ -93,18 +95,21 @@ export default function CountryEditPage() {
         setbioMainInputError(false)
         setbioMoreInputError(false)
         setphotoInputError(false)
-        setdisableSubmitButton(countryTitleRef.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в названии страны
+        setdisableSubmitButton(countryTitleInput.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в названии страны
+        
+        countryTagInput.current.value = countryTagInput.current.value.replaceAll(" ", "_")
+
     }
 
     // Ивент субмит у формы создания/изменения страны
     function submitForm() {
         handleInputUpdate() // Сброс всех ошибок
 
-        let formTitle = countryTitleRef.current.value
-        let formTag = countryTagRef.current.value
-        let formPhoto = countryPhotoRef.current.value
-        let formBioMain = countryBioMainRef.current.value
-        let formBioMore = countryBioMoreRef.current.value
+        let formTitle = countryTitleInput.current.value
+        let formTag = countryTagInput.current.value
+        let formPhoto = countryPhotoInput.current.value
+        let formBioMain = countryBioMainInput.current.value
+        let formBioMore = countryBioMoreInput.current.value
 
 
         // Проверка длины Названия
@@ -160,7 +165,7 @@ export default function CountryEditPage() {
             return
         }
 
-        formBioMain = formBioMain.replaceAll("\n","<br>")
+        // formBioMain = formBioMain.replaceAll("\n","<br>")
 
 
         // Проверка длины доп описания
@@ -170,7 +175,7 @@ export default function CountryEditPage() {
             return
         }
 
-        formBioMore = formBioMore.replaceAll("\n","<br>")
+        // formBioMore = formBioMore.replaceAll("\n","<br>")
 
 
         // Отключаем кнопку только в случае если прошло все проверки
@@ -210,6 +215,11 @@ export default function CountryEditPage() {
 
                                 localStorage.userData = JSON.stringify(newUserData)
                                 Context.setuserData(newUserData)
+
+                                // Удаляем старого юзера и загружаем нового
+                                let usersWithoutUser = Context.users.filter((user) => {return user.id !== Context.userData.id})
+                                usersWithoutUser.push(newUserData)
+                                Context.setusers(usersWithoutUser)
 
                                 setPageLoading(false)
                                 Navigate("/countries/" + newCountryData.country_id)
@@ -260,7 +270,7 @@ export default function CountryEditPage() {
 
                     <CustomInput label="Название страны">
                         <input
-                            ref={countryTitleRef}
+                            ref={countryTitleInput}
                             type="text"
                             id="form-title"
                             className={titleInputError ? "error" : null}
@@ -273,7 +283,7 @@ export default function CountryEditPage() {
 
                     <CustomInput label="Тег страны">
                         <input
-                            ref={countryTagRef}
+                            ref={countryTagInput}
                             type="text"
                             id="form-tag"
                             className={tagInputError ? "error" : null}
@@ -281,35 +291,35 @@ export default function CountryEditPage() {
                             onInput={handleInputUpdate}
                             onFocus={() => {
                                 // Если при нажатии нету символов - добавляем @ в начало
-                                if (!countryTagRef.current.value) {
-                                    countryTagRef.current.value = "@"
+                                if (!countryTagInput.current.value) {
+                                    countryTagInput.current.value = "@"
                                 }
                             }}
                             onBlur={() => {
                                 // Если остался только символ @ - удаляем его
-                                if (countryTagRef.current.value === "@") {
-                                    countryTagRef.current.value = ""
+                                if (countryTagInput.current.value === "@") {
+                                    countryTagInput.current.value = ""
                                 }
 
                                 // Если строка не пустая, но начинается не с @ - добавляем в начало и обрезаем строку
-                                if (countryTagRef.current.value && !countryTagRef.current.value.startsWith("@")) {
-                                    countryTagRef.current.value = "@" + countryTagRef.current.value.slice(0, CONSTS.countryTagMax)
+                                if (countryTagInput.current.value && !countryTagInput.current.value.startsWith("@")) {
+                                    countryTagInput.current.value = "@" + countryTagInput.current.value.slice(0, CONSTS.countryTagMax)
                                 }
                             }}
                             required
                         />
                     </CustomInput>
-                    <small>Длина тега до {CONSTS.countryTagMax} символов<br />Только латиница, цифры и спецсимволы</small>
+                    <small>Без пробелов<br/>Длина тега до {CONSTS.countryTagMax} символов<br />Только латиница, цифры и спецсимволы</small>
 
                     <CustomInput label="Ссылка на флаг страны">
                         <input
-                            ref={countryPhotoRef}
+                            ref={countryPhotoInput}
                             type="text"
                             id="form-photo"
                             className={photoInputError ? "error" : null}
                             maxLength={CONSTS.countryPhotoMax}
                             onInput={() => {
-                                checkImageSource(countryPhotoRef.current.value) // Проверяем фотографию
+                                checkImageSource(countryPhotoInput.current.value) // Проверяем фотографию
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
                             }}
                             required
@@ -321,12 +331,12 @@ export default function CountryEditPage() {
                     
                     <CustomInput label={`Описание страны (${countryBioMainLenght} / ${CONSTS.countryBioMainMax})`}>
                         <textarea
-                            ref={countryBioMainRef}
+                            ref={countryBioMainInput}
                             id="form-bio"
                             className={bioMainInputError ? "error" : null}
                             maxLength={CONSTS.countryBioMainMax}
                             onInput={() => {
-                                setcountryBioMainLenght(countryBioMainRef.current.value.length) // Обновляем значение длины описания
+                                setcountryBioMainLenght(countryBioMainInput.current.value.length) // Обновляем значение длины описания
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
                             }}
                             required 
@@ -336,12 +346,12 @@ export default function CountryEditPage() {
 
                     <CustomInput label={`Доп. описание (${countryBioMoreLenght} / ${CONSTS.countryBioMoreMax})`}>
                         <textarea
-                            ref={countryBioMoreRef}
+                            ref={countryBioMoreInput}
                             id="form-bio"
                             className={bioMoreInputError ? "error" : null}
                             maxLength={CONSTS.countryBioMoreMax}
                             onInput={() => {
-                                setcountryBioMoreLenght(countryBioMoreRef.current.value.length) // Обновляем значение длины описания
+                                setcountryBioMoreLenght(countryBioMoreInput.current.value.length) // Обновляем значение длины описания
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
                             }}
                             required 

@@ -44,25 +44,28 @@ export default function UserPage() {
         if (!Object.keys(Context.users).length) {
             return
         }
-        
+
         let findedUser = Context.users.find(user => user.id === URLparams.id)
 
         if (!findedUser) {
             setuserNotFound(true)
+            setuserData({})
+            setuserDataVk({})
             return
         }
 
         setuserData(findedUser)
         document.title = findedUser.name + " | Ежиное-РП"
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [[], Context.users])
+    }, [URLparams.id, Context.users])
 
     useEffect(() => {
         console.log("VKAPI: users.get");
+        setuserDataVk({})
 
         // Находим информацию о пользователе в вк при изменении id поиска
         VKAPI("users.get", {user_id: URLparams.id, fields: "photo_200"}, (vkData) => {
-            console.log("VKAPI: user received");
+            console.log("VKAPI: users.get");
 
             if (vkData.response.length) {
                 vkData = vkData.response[0]
@@ -93,21 +96,31 @@ export default function UserPage() {
                             </div>
                         </div>
 
+                        {/* Кнопка выхода если отображается профиль владельда страницы */}
+                        {isSelfRender &&
+                            <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
+                        }
+
                         <Link to={`https://vk.com/id${userData.id}`} target="_blank" rel="noopener noreferrer">
                             <CustomButton
                                 src={userDataVk.photo}
                                 text={userDataVk.name}
                             />
                         </Link>
+                        
+                        {/* Если есть страна - отображаем */}
+                        {userData.country_id &&
+                            <Link to={`/countries/${userData.country_id}`}>
+                                <CustomButton
+                                    src={userData.country_photo}
+                                    text={userData.country_title}
+                                />
+                            </Link>
+                        }
 
                         {/* Если есть описание - отображаем */}
                         {userData.bio &&
                             <p className="user-profile__bio">{userData.bio}</p>
-                        }
-
-                        {/* Кнопка выхода если отображается профиль владельда страницы */}
-                        {isSelfRender &&
-                            <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
                         }
                     </section>
                     
