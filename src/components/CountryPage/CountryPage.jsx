@@ -79,21 +79,36 @@ export default function CountryPage() {
                                 </Link>
                             }
 
-                            <Link to={`/users/${countryData.id}`}>
-                                <CustomButton
-                                    src={countryData.photo}
-                                    text={countryData.name}
-                                />
-                            </Link>
+                            <div className="country-profile__row">
+                                <p className="text-gray">Автор страны</p>
+                                <Link to={`/users/${countryData.id}`}>
+                                    <CustomButton
+                                        src={countryData.photo}
+                                        text={countryData.name}
+                                    />
+                                </Link>
+                            </div>
 
                             {/* Если есть описание - отображаем */}
                             {countryData.country_bio_main &&
-                                <p className="country-profile__bio">{countryData.country_bio_main}</p>
+                                <>
+                                    <div className="country-profile__divider"></div>
+                                    <div className="country-profile__column">
+                                        <p className="text-gray">Описание</p>
+                                        <p className="country-profile__bio">{countryData.country_bio_main}</p>
+                                    </div>
+                                </>
                             }
 
                             {/* Если есть допю описание - отображаем */}
                             {countryData.country_bio_more &&
-                                <p className="country-profile__bio">{countryData.country_bio_more}</p>
+                                <>
+                                    <div className="country-profile__divider"></div>
+                                    <div className="country-profile__column">
+                                        <p className="text-gray">Доп. описание</p>
+                                        <p className="country-profile__bio">{countryData.country_bio_more}</p>
+                                    </div>
+                                </>
                             }
                         </section>
 

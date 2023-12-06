@@ -60,15 +60,30 @@ export default function UserPage() {
     }, [URLparams.id, Context.users])
 
     useEffect(() => {
-        console.log("VKAPI: users.get");
         setuserDataVk({})
+
+        // Если юзер в кэше
+        if (sessionStorage["vkUser" + URLparams.id]) {
+            let hashVkUser = JSON.parse(sessionStorage["vkUser" + URLparams.id])
+            setuserDataVk({
+                photo: hashVkUser.photo,
+                name: hashVkUser.name
+            })
+            return
+        }
 
         // Находим информацию о пользователе в вк при изменении id поиска
         VKAPI("users.get", {user_id: URLparams.id, fields: "photo_200"}, (vkData) => {
             console.log("VKAPI: users.get");
-
             if (vkData.response.length) {
                 vkData = vkData.response[0]
+
+                // Сохраняем юзера
+                sessionStorage["vkUser" + vkData.id] = JSON.stringify({
+                    photo: vkData.photo_200,
+                    name: `${vkData.first_name} ${vkData.last_name}`
+                })
+
                 setuserDataVk({
                     photo: vkData.photo_200,
                     name: `${vkData.first_name} ${vkData.last_name}`
@@ -101,26 +116,42 @@ export default function UserPage() {
                             <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
                         }
 
-                        <Link to={`https://vk.com/id${userData.id}`} target="_blank" rel="noopener noreferrer">
-                            <CustomButton
-                                src={userDataVk.photo}
-                                text={userDataVk.name}
-                            />
-                        </Link>
+                        <div className="user-profile__row">
+                            <p className="text-gray">Вк участника</p>
+                            <Link to={`https://vk.com/id${userData.id}`} target="_blank" rel="noopener noreferrer">
+                                <CustomButton
+                                    src={userDataVk.photo}
+                                    text={userDataVk.name}
+                                />
+                            </Link>
+                        </div>
                         
                         {/* Если есть страна - отображаем */}
                         {userData.country_id &&
-                            <Link to={`/countries/${userData.country_id}`}>
-                                <CustomButton
-                                    src={userData.country_photo}
-                                    text={userData.country_title}
-                                />
-                            </Link>
+                            <>
+                                <div className="user-profile__divider"></div>
+                                <div className="user-profile__row">
+                                    <p className="text-gray">Страна</p>
+                                    <Link to={`/countries/${userData.country_id}`}>
+                                        <CustomButton
+                                            src={userData.country_photo}
+                                            text={userData.country_title}
+                                        />
+                                    </Link>
+                                </div>
+                            </>
                         }
+                        
 
                         {/* Если есть описание - отображаем */}
                         {userData.bio &&
-                            <p className="user-profile__bio">{userData.bio}</p>
+                            <>
+                                <div className="user-profile__divider"></div>
+                                <div className="user-profile__column">
+                                    <p className="text-gray">Описание</p>
+                                    <p className="user-profile__bio">{userData.bio}</p>
+                                </div>
+                            </>
                         }
                     </section>
                     

@@ -10,12 +10,14 @@
     gap: var(--block-gap);
 }
 
+/* Верхняя часть профиля */
 .country-profile__top {
     display: flex;
     height: 100px;
     gap: var(--block-gap);
 }
 
+/* Блок с именем и тегом */
 .country-profile__top-name {
     display: flex;
     flex-direction: column;
@@ -23,6 +25,7 @@
     gap: var(--block-gap);
 }
 
+/* Высота текста и обрезка */
 .country-profile__top-name h2 {
     max-height: 58px;
     overflow: hidden;
@@ -33,10 +36,12 @@
     cursor: pointer;
 }
 
+/* Фотография */
 .country-profile__top-photo {
     height: 100px;
 }
 
+/* Круглая форма */
 .country-profile__top-photo img {
     width: 100px;
     height: 100px;
@@ -45,6 +50,38 @@
     background-color: var(--bg-primary);
     object-fit: cover;
 }
+
+
+/* Разделение строк */
+.country-profile__divider {
+    border-bottom: 1px solid var(--border-primary);
+}
+
+
+/* Строка с информацией */
+.country-profile__row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.country-profile__row > p {
+    width: 40%;
+}
+
+.country-profile__row > a {
+    width: 60%;
+}
+
+
+/* Колонна с информацией (Описание) */
+.country-profile__column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-gap);
+}
+
 
 /* Описание - текст стилизованный под текстареа */
 .country-profile__bio {

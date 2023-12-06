@@ -10,12 +10,14 @@
     gap: var(--block-gap);
 }
 
+/* Верхняя часть профиля */
 .user-profile__top {
     display: flex;
     height: 100px;
     gap: var(--block-gap);
 }
 
+/* Блок с именем и тегом */
 .user-profile__top-name {
     display: flex;
     flex-direction: column;
@@ -23,6 +25,7 @@
     gap: var(--block-gap);
 }
 
+/* Высота текста и обрезка */
 .user-profile__top-name h2 {
     max-height: 58px;
     overflow: hidden;
@@ -33,10 +36,12 @@
     cursor: pointer;
 }
 
+/* Фотография */
 .user-profile__top-photo {
     height: 100px;
 }
 
+/* Круглая форма */
 .user-profile__top-photo img {
     width: 100px;
     height: 100px;
@@ -45,6 +50,38 @@
     background-color: var(--bg-primary);
     object-fit: cover;
 }
+
+
+/* Разделение строк */
+.user-profile__divider {
+    border-bottom: 1px solid var(--border-primary);
+}
+
+
+/* Строка с информацией */
+.user-profile__row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.user-profile__row > p {
+    width: 40%;
+}
+
+.user-profile__row > a {
+    width: 60%;
+}
+
+
+/* Колонна с информацией (Описание) */
+.user-profile__column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-gap);
+}
+
 
 /* Описание - текст стилизованный под текстареа */
 .user-profile__bio {
