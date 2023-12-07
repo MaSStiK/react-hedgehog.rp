@@ -1,5 +1,5 @@
 import { useEffect, useContext, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { DataContext } from "../Context"
 import CustomInput from "../CustomInput/CustomInput"
 import Aside from "../Aside/Aside"
@@ -35,8 +35,8 @@ export default function CountryEditPage() {
 
     useEffect(() => {
         document.title = `${Context.userData.country_id ? "Изменение" : "Создание"} страны | Ежиное-РП`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
 
     useEffect(() => {
         countryTitleInput.current.value = Context.userData.country_title
@@ -326,7 +326,7 @@ export default function CountryEditPage() {
                         />
                     </CustomInput>
 
-                    <small>Длина ссылки до {CONSTS.countryPhotoMax} символов<br />Размер изображения от {CONSTS.countryPhotoPxMin}px/{CONSTS.countryPhotoPxMin}px до {CONSTS.countryPhotoPxMax}px/{CONSTS.countryPhotoPxMax}px<br />Замена на стандартное изображение если поле пустое</small>
+                    <small>Длина ссылки до {CONSTS.countryPhotoMax} символов<br />Размер изображения от {CONSTS.countryPhotoPxMin}px/{CONSTS.countryPhotoPxMin}px до {CONSTS.countryPhotoPxMax}px/{CONSTS.countryPhotoPxMax}px<br />Замена на стандартное изображение если поле пустое<br /><Link to="https://is.gd" target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small>
                     <img src={countryPhotoPreview} alt="preview" className={countryPhotoPreview ? null : "hidden"} />
                     
                     <CustomInput label={`Описание страны (${countryBioMainLenght} / ${CONSTS.countryBioMainMax})`}>

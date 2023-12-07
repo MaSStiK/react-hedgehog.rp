@@ -19,6 +19,16 @@ export function GSAPI(action, data={}, func) {
 }
 
 
+function TESTAPI(link, func) {
+    $.ajax({
+        url: "https://is.gd/create.php?format=json&url=" + link,
+        method: "GET",
+        dataType: "JSONP",
+        success: func,
+    })
+}
+
+
 // // ----------------------------------------special----------------------------------------
 // // Специльно для входа
 // // data: login, password

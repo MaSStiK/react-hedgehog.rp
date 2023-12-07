@@ -8,15 +8,15 @@ export const CONSTS = {
 
     userNameMin: 1,
     userNameMax: 64,
-    userBioMax: 1000,
-    userPhotoMax: 1000,
+    userBioMax: 850,
+    userPhotoMax: 256,
 
     countryTitleMin: 1,
     countryTitleMax: 128,
     countryTagMax: 32,
-    countryBioMainMax: 750,
-    countryBioMoreMax: 750,
-    countryPhotoMax: 1000,
+    countryBioMainMax: 850,
+    countryBioMoreMax: 850,
+    countryPhotoMax: 256,
     countryPhotoPxMin: 40,
     countryPhotoPxMax: 1920,
 }
@@ -34,8 +34,4 @@ export function setPageLoading(show=true) {
     }
 
     $("#root").append(`<div id="page-loading"></div>`)
-}
-
-export function openLink(url)  {
-    window.open(url, "_blank", "noreferrer");
 }

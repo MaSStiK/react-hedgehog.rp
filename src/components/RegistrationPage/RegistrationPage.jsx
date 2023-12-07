@@ -5,7 +5,7 @@ import CustomInput from "../CustomInput/CustomInput"
 import CustomButton from "../CustomButton/CustomButton"
 import { GSAPI } from "../GS-API"
 import { VKAPI } from "../VK-API"
-import { CONSTS, setPageLoading, openLink } from "../Global"
+import { CONSTS, setPageLoading } from "../Global"
 import imgLogo from "../../assets/logo/logo.png"
 import imgCopy from "../../assets/icons/Copy.svg"
 
@@ -251,7 +251,7 @@ export default function RegistrationPage() {
                 <div id="section-reg__page-first" className={showPage !== 1 ? "hidden" : null}>
                     <h2>Регистрация</h2>
                     <h3>1) Прикрепите свой профиль в ВК</h3>
-                    <p>Отправте код ниже <span onClick={() => openLink("https://vk.com/write-202912556")} className="text-link">нашему боту "Географ"</span></p>
+                    <p>Отправте код ниже <Link to={"https://vk.com/write-202912556"} target="_blank" rel="noopener noreferrer" className="text-link">нашему боту "Географ"</Link></p>
 
                     <button className="tp section-reg__code-button" onClick={handleCopyButton}>
                         <p id="section-reg__code">Код: {vkCode}</p>

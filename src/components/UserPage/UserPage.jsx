@@ -116,6 +116,7 @@ export default function UserPage() {
                             <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
                         }
 
+                        <div className="user-profile__divider"></div>
                         <div className="user-profile__row">
                             <p className="text-gray">Вк участника</p>
                             <Link to={`https://vk.com/id${userData.id}`} target="_blank" rel="noopener noreferrer">

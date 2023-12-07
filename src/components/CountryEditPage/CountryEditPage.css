@@ -21,3 +21,7 @@
     height: 100px;
     object-fit: contain;
 }
+
+.section-country-edit small .text-link {
+    font-size: var(--p-small-size);
+}

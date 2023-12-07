@@ -52,6 +52,7 @@ export default function CountryPage() {
     }, [URLparams.id, Context.users])
 
 
+
     return (
         <>
             <Aside />
@@ -61,56 +62,66 @@ export default function CountryPage() {
 
                     {/* Если страна найдена */}
                     {Object.keys(countryData).length
-                        ? <section className="country-profile">
-                            <div className="country-profile__top">
-                                <div className="country-profile__top-photo">
-                                    <img src={countryData.country_photo ? countryData.country_photo : imgBasePhoto} alt="userpic" />
-                                </div>
-                                <div className="country-profile__top-name">
-                                    <h2>{countryData.country_title}</h2>
-                                    <p onClick={handleCopyButton} className="country-profile__top-tag text-cut text-gray">{showCopyMessage ? "Скопировано" : countryData.country_tag}</p>
-                                </div>
-                            </div>
-
-                            {/* Кнопка редактирования страны если страна пользователя */}
-                            {isSelfRender &&
-                                <Link to={"/countries/edit"}>
-                                    <button className="green">Изменить страну</button>
-                                </Link>
-                            }
-
-                            <div className="country-profile__row">
-                                <p className="text-gray">Автор страны</p>
-                                <Link to={`/users/${countryData.id}`}>
-                                    <CustomButton
-                                        src={countryData.photo}
-                                        text={countryData.name}
-                                    />
-                                </Link>
-                            </div>
-
-                            {/* Если есть описание - отображаем */}
-                            {countryData.country_bio_main &&
-                                <>
-                                    <div className="country-profile__divider"></div>
-                                    <div className="country-profile__column">
-                                        <p className="text-gray">Описание</p>
-                                        <p className="country-profile__bio">{countryData.country_bio_main}</p>
+                        ? <>
+                            <section className="country-profile">
+                                <div className="country-profile__top">
+                                    <div className="country-profile__top-photo">
+                                        <img src={countryData.country_photo ? countryData.country_photo : imgBasePhoto} alt="userpic" />
                                     </div>
-                                </>
-                            }
-
-                            {/* Если есть допю описание - отображаем */}
-                            {countryData.country_bio_more &&
-                                <>
-                                    <div className="country-profile__divider"></div>
-                                    <div className="country-profile__column">
-                                        <p className="text-gray">Доп. описание</p>
-                                        <p className="country-profile__bio">{countryData.country_bio_more}</p>
+                                    <div className="country-profile__top-name">
+                                        <h2>{countryData.country_title}</h2>
+                                        <p onClick={handleCopyButton} className="country-profile__top-tag text-cut text-gray">{showCopyMessage ? "Скопировано" : countryData.country_tag}</p>
                                     </div>
-                                </>
-                            }
-                        </section>
+                                </div>
+
+                                {/* Кнопка редактирования страны если страна пользователя */}
+                                {isSelfRender &&
+                                    <Link to={"/countries/edit"}>
+                                        <button className="green">Изменить страну</button>
+                                    </Link>
+                                }
+
+                                <div className="country-profile__divider"></div>
+                                <div className="country-profile__row">
+                                    <p className="text-gray">Автор страны</p>
+                                    <Link to={`/users/${countryData.id}`}>
+                                        <CustomButton
+                                            src={countryData.photo}
+                                            text={countryData.name}
+                                        />
+                                    </Link>
+                                </div>
+
+                                {/* Если есть описание - отображаем */}
+                                {countryData.country_bio_main &&
+                                    <>
+                                        <div className="country-profile__divider"></div>
+                                        <div className="country-profile__column">
+                                            <p className="text-gray">Описание</p>
+                                            <p className="country-profile__bio">{countryData.country_bio_main}</p>
+                                        </div>
+                                    </>
+                                }
+
+                                {/* Если есть допю описание - отображаем */}
+                                {countryData.country_bio_more &&
+                                    <>
+                                        <div className="country-profile__divider"></div>
+                                        <div className="country-profile__column">
+                                            <p className="text-gray">Доп. описание</p>
+                                            <p className="country-profile__bio">{countryData.country_bio_more}</p>
+                                        </div>
+                                    </>
+                                }
+
+                            </section>
+
+                            <section>
+                                <Link to={"/news/write"}>
+                                    <button>Написать новость</button>
+                                </Link>
+                            </section>
+                        </>
 
                         // Если страна не найдена, будет показан только когда будет ошибка
                         : <section className={`country-profile ${!countryNotFound ? "hidden" : null}`}>
