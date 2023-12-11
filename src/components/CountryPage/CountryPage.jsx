@@ -117,7 +117,7 @@ export default function CountryPage() {
                             </section>
 
                             <section>
-                                <Link to={"/news/write"}>
+                                <Link to={"/news/add"}>
                                     <button>Написать новость</button>
                                 </Link>
                             </section>

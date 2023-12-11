@@ -51,6 +51,11 @@ export default function App() {
     Context.users = ContextUsers
     Context.setusers = setContextUsers
 
+    // Передаем в контекст массив всех юзеров
+    const [ContextPosts, setContextPosts] = useState([]);
+    Context.posts = ContextPosts
+    Context.setposts = setContextPosts
+
     useEffect(() => {
         // Анимация загрузки страницы
         setPageLoading()
@@ -76,6 +81,14 @@ export default function App() {
                     window.location.reload()
                 })
             }
+
+            // Загрузка всех юзеров
+            GSAPI("GETnews", {}, (data) => {
+                console.log("GSAPI: GETnews");
+
+                // После получения всех новостей обновляем список в контексте
+                setContextPosts(data)
+            })
 
             // Загрузка всех юзеров
             GSAPI("GETusers", {}, (data) => {
@@ -112,7 +125,7 @@ export default function App() {
                 <Route path="/home" element={<Home />} />
 
                 <Route path="/news" element={<News />} />
-                <Route path="/news/write" element={
+                <Route path="/news/add" element={
                     <ProtectedRoute isAllowed={Context.userData}>
                         <NewsWrite />
                     </ProtectedRoute>

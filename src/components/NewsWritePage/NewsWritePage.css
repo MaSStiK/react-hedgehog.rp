@@ -4,13 +4,7 @@
     gap: var(--article-gap);
 }
 
-.section-news-write__row {
-    display: flex;
-    flex-direction: row;
-    gap: var(--block-gap);
-}
-
-.section-news-write__column {
+.section-news-write {
     display: flex;
     flex-direction: column;
     gap: var(--block-gap);

@@ -98,7 +98,6 @@ export default function CountryEditPage() {
         setdisableSubmitButton(countryTitleInput.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в названии страны
         
         countryTagInput.current.value = countryTagInput.current.value.replaceAll(" ", "_")
-
     }
 
     // Ивент субмит у формы создания/изменения страны
@@ -183,7 +182,7 @@ export default function CountryEditPage() {
         setPageLoading()
 
          // Данные нового пользователя
-         const newCountryData = {
+        const newCountryData = {
             country_id: "c" + Context.userData.id, // Уникальный id страны
             country_tag: formTag, // Тег для упрощенного поиска
             country_title: formTitle, // Отображаемое название страны
@@ -326,7 +325,7 @@ export default function CountryEditPage() {
                         />
                     </CustomInput>
 
-                    <small>Длина ссылки до {CONSTS.countryPhotoMax} символов<br />Размер изображения от {CONSTS.countryPhotoPxMin}px/{CONSTS.countryPhotoPxMin}px до {CONSTS.countryPhotoPxMax}px/{CONSTS.countryPhotoPxMax}px<br />Замена на стандартное изображение если поле пустое<br /><Link to="https://is.gd" target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small>
+                    <small>Длина ссылки до {CONSTS.countryPhotoMax} символов<br />Размер изображения от {CONSTS.countryPhotoPxMin}px/{CONSTS.countryPhotoPxMin}px до {CONSTS.countryPhotoPxMax}px/{CONSTS.countryPhotoPxMax}px<br />Замена на стандартное изображение если поле пустое<br /><Link to={"https://is.gd"} target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small>
                     <img src={countryPhotoPreview} alt="preview" className={countryPhotoPreview ? null : "hidden"} />
                     
                     <CustomInput label={`Описание страны (${countryBioMainLenght} / ${CONSTS.countryBioMainMax})`}>

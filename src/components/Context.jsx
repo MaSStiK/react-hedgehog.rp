@@ -10,4 +10,7 @@ export const DataContext = createContext({
 
     users: [],
     setusers: () => {},
+
+    posts: [],
+    setposts: () => {},
 });

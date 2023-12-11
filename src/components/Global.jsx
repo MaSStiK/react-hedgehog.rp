@@ -19,6 +19,12 @@ export const CONSTS = {
     countryPhotoMax: 256,
     countryPhotoPxMin: 40,
     countryPhotoPxMax: 1920,
+
+    postTitleMin: 1,
+    postTitleMax: 128,
+    postTextMax: 850,
+    attachmentsMax: 256,
+    attachmentsCountMax: 10,
 }
 
 // Получить переменные из ссылки

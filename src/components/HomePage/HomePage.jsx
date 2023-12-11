@@ -35,13 +35,15 @@ export default function HomePage() {
                 </section>
 
                 <section className="section-home__column">
-                <h2>Последнее видео на канале</h2>
+                    <h2>Последнее видео на канале</h2>
 
-                <iframe width="526" height="280" src="https://www.youtube.com/embed/niRy4Ygg7_g?si=CY2X1VXnpdn5SiW2" title="YouTube video player" frameBorder="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-                    {/* <Link className="section-home-link__wrapper" to="https://www.youtube.com/watch?v=niRy4Ygg7_g" target="_blank">
-                        <img src="https://sun9-37.userapi.com/impg/MOKIKtw-uHfaNujGokcXnne6Me14b32_midRWg/PE71cB-JuYY.jpg?size=269x151&quality=96&sign=9529152907f9bba73a82161de7d87b8d&type=album" alt="link-youtube" />
-                        <h3>Новое видео на канале</h3>
-                    </Link> */}
+                    <iframe width="526" height="280" src="https://www.youtube.com/embed/niRy4Ygg7_g?si=CY2X1VXnpdn5SiW2" title="YouTube video player" frameBorder="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+                </section>
+
+                <section>
+                    <Link to={"/news"}>
+                        <button>Больше новостей</button>
+                    </Link>
                 </section>
             </article>
 
