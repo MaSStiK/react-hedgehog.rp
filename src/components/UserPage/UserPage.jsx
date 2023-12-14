@@ -118,7 +118,7 @@ export default function UserPage() {
 
                         <div className="user-profile__divider"></div>
                         <div className="user-profile__row">
-                            <p className="text-gray">Вк участника</p>
+                            <p className="text-gray">ВКонтакте</p>
                             <Link to={`https://vk.com/id${userData.id}`} target="_blank" rel="noopener noreferrer">
                                 <CustomButton
                                     src={userDataVk.photo}
@@ -149,7 +149,7 @@ export default function UserPage() {
                             <>
                                 <div className="user-profile__divider"></div>
                                 <div className="user-profile__column">
-                                    <p className="text-gray">Описание</p>
+                                    <p className="text-gray">О себе</p>
                                     <p className="user-profile__bio">{userData.bio}</p>
                                 </div>
                             </>

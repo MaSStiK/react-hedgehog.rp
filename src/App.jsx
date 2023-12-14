@@ -17,7 +17,7 @@ import Registration from "./components/RegistrationPage/RegistrationPage";
 
 import Home from "./components/HomePage/HomePage";
 import News from "./components/NewsPage/NewsPage";
-import NewsWrite from "./components/NewsWritePage/NewsWritePage";
+import NewsAdd from "./components/NewsAddPage/NewsAddPage";
 import User from "./components/UserPage/UserPage";
 import Users from "./components/UsersPage/UsersPage";
 import Country from "./components/CountryPage/CountryPage";
@@ -127,7 +127,7 @@ export default function App() {
                 <Route path="/news" element={<News />} />
                 <Route path="/news/add" element={
                     <ProtectedRoute isAllowed={Context.userData}>
-                        <NewsWrite />
+                        <NewsAdd />
                     </ProtectedRoute>
                 }/>
 

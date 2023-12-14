@@ -7,11 +7,11 @@ import { CONSTS, setPageLoading } from "../Global"
 import { GSAPI } from "../GS-API"
 
 
-import "./NewsWritePage.css"
-import "./NewsWritePage-phone.css"
+import "./NewsAddPage.css"
+import "./NewsAddPage-phone.css"
 
 
-export default function NewsWritePage() {
+export default function NewsAddPage() {
     const Navigate = useNavigate()
     const Context = useContext(DataContext)
 
