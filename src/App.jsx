@@ -20,6 +20,7 @@ import News from "./components/NewsPage/NewsPage";
 import NewsAdd from "./components/NewsAddPage/NewsAddPage";
 import User from "./components/UserPage/UserPage";
 import Users from "./components/UsersPage/UsersPage";
+import UserEdit from "./components/UserEditPage/UserEditPage";
 import Country from "./components/CountryPage/CountryPage";
 import Countries from "./components/CountriesPage/CountriesPage";
 import CountryEdit from "./components/CountryEditPage/CountryEditPage";
@@ -133,11 +134,11 @@ export default function App() {
 
                 <Route path="/users" element={<Users />} />
                 <Route path="/users/:id" element={<User />} />
-                {/* <Route path="/users/edit" element={
+                <Route path="/users/edit" element={
                     <ProtectedRoute isAllowed={Context.userData}>
                         <UserEdit />
                     </ProtectedRoute>
-                }/> */}
+                }/>
 
                 <Route path="/countries" element={<Countries />} />
                 <Route path="/countries/:id" element={<Country />} />

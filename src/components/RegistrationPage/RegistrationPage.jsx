@@ -8,6 +8,8 @@ import { VKAPI } from "../VK-API"
 import { CONSTS, setPageLoading } from "../Global"
 import imgLogo from "../../assets/logo/logo.png"
 import imgCopy from "../../assets/icons/Copy.svg"
+import { LINKAPI } from "../LINK-API"
+
 
 import "./RegistrationPage.css"
 import "./RegistrationPage-phone.css"
@@ -180,11 +182,16 @@ export default function RegistrationPage() {
         }
 
 
+        // Отключаем кнопку только в случае если прошло все проверки
+        setdisableSubmitButton(true)
+        setPageLoading()
+
+
         // Таймштамп
         let dateNow = Date.now()
 
         // Данные нового пользователя
-        const newUserData = {
+        let newUserData = {
             id: vkData.id.toString(), // id на сайте, по стандарту id от вк, но в случае чего можно изменить вручную (К примеру для второго аккаунта)
             token: token, // Токен авторизации
             tag: "@" + vkData.id.toString(), // Тег для упрощенного поиска
@@ -203,27 +210,39 @@ export default function RegistrationPage() {
             country_id: "",
             country_tag: "",
             country_title: "",
-            country_bio: "",
-            country_photo: ""
+            country_photo: "",
+            country_bio_main: "",
+            country_bio_more: "",
         }
 
-        // Отключаем кнопку только в случае если прошло все проверки
-        setdisableSubmitButton(true)
-        setPageLoading()
+        LINKAPI(vkData.photo, (data) => {
+            // Если получилось сократить ссылку - сохраняем ее
+            if (data.shorturl) {
+                newUserData.photo = data.shorturl
+            }
 
-        GSAPI("POSTuser", {data: JSON.stringify(newUserData), login: formLogin}, (data) => {
+            // Отправляем пользователя
+            GSAPI("POSTuser", {data: JSON.stringify(newUserData), login: formLogin}, (data) => {
+                console.log("GSAPI: POSTuser");
 
-            // Если токен уникальный
-            if (data.success) {
+                // Если токен не уникальный
+                if (!data.success || !Object.keys(data).length) {
+                    seterrorText("Введенный логин занят")
+                    setloginInputError(true)
+                    setdisableSubmitButton(false)
+                    setPageLoading(false)
+                    return
+                }
+    
                 // Отправляем сообщение в беседу логов
                 let VKAPImessage = `Регистрация пользователя:\nname: ${vkData.name}\nid: ${vkData.id}\nlink: ${"https://vk.com/id" + vkData.id}`
                 VKAPI("messages.send", {peer_id: 2000000007, random_id: 0, message: VKAPImessage}, () => {
-
+    
                     // Отправляем сообщение пользователю
                     VKAPImessage = "Вы успешно зарегистрировались!"
                     VKAPI("messages.send", {peer_id: vkData.id, random_id: 0, message: VKAPImessage}, () => {
                         setPageLoading(false)
-
+    
                         // Если успех - сохраняем и открываем главную
                         localStorage.userData = JSON.stringify(newUserData)
                         Context.setuserData(newUserData)
@@ -231,13 +250,7 @@ export default function RegistrationPage() {
                         Navigate("/home")
                     })
                 })
-                return
-            }
-
-            seterrorText("Введенный логин занят")
-            setloginInputError(true)
-            setdisableSubmitButton(false)
-            setPageLoading(false)
+            })
         })
     }
 

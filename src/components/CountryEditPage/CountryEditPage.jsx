@@ -5,6 +5,8 @@ import CustomInput from "../CustomInput/CustomInput"
 import Aside from "../Aside/Aside"
 import { CONSTS, setPageLoading } from "../Global"
 import { GSAPI } from "../GS-API"
+import { LINKAPI } from "../LINK-API"
+
 
 
 import "./CountryEditPage.css"
@@ -25,7 +27,7 @@ export default function CountryEditPage() {
     const [photoInputError, setphotoInputError] = useState(false) // Отображать ли ошибку инпута Сслыка на фото
     const [disableSubmitButton, setdisableSubmitButton] = useState(true) // Отключить ли кнопку сохранения
 
-    const basePhotoSrc = "https://sun9-67.userapi.com/impg/X1_O1m3fnSygoDxCy1F0E2XwkkVM3gnJoyq9Ag/zdkh1clrZtk.jpg?size=1200x800&quality=96&sign=a947569cd58dd93b7681dc5c0dbf03dc&type=album"
+    const basePhotoSrc = "https://is.gd/fzchSz" // Сокращенная ссылка на базовое фото
 
     const countryTitleInput = useRef()
     const countryTagInput = useRef()
@@ -164,8 +166,6 @@ export default function CountryEditPage() {
             return
         }
 
-        // formBioMain = formBioMain.replaceAll("\n","<br>")
-
 
         // Проверка длины доп описания
         if (formBioMore.length > CONSTS.countryBioMoreMax) {
@@ -174,78 +174,125 @@ export default function CountryEditPage() {
             return
         }
 
-        // formBioMore = formBioMore.replaceAll("\n","<br>")
-
-
+        
         // Отключаем кнопку только в случае если прошло все проверки
         setdisableSubmitButton(true)
         setPageLoading()
 
-         // Данные нового пользователя
-        const newCountryData = {
+        // Обновленные данные о стране
+        let newCountryData = {
             country_id: "c" + Context.userData.id, // Уникальный id страны
             country_tag: formTag, // Тег для упрощенного поиска
             country_title: formTitle, // Отображаемое название страны
-            // country_bio_main: formBioMain, // Описание страны
-            // country_bio_more: formBioMore, // Описание страны
+            country_bio_main: formBioMain, // Описание страны
+            country_bio_more: formBioMore, // Доп описание страны
             country_photo: formPhoto, // Флаг страны
         }
 
-        GSAPI("PUTcountry", {token: Context.userData.token, data: JSON.stringify(newCountryData)}, (data) => {
-            console.log("GSAPI: PUTcountry");
+        LINKAPI(formPhoto, (data) => {
+            // Если получилось сократить ссылку - сохраняем ее
+            if (data.shorturl) {
+                newCountryData.country_photo = data.shorturl
+            }
 
-            // Если тег уникальный
-            if (data.success) {
-                GSAPI("PUTcountryBioMain", {token: Context.userData.token, country_bio_main: formBioMain}, (data) => {
-                    console.log("GSAPI: PUTcountryBioMain");
+            // После чего начинаем отпарвк информации
+            sendData(newCountryData)
+        })
 
-                    if (data.success) {
-                        GSAPI("PUTcountryBioMore", {token: Context.userData.token, country_bio_more: formBioMore}, (data) => {
-                            console.log("GSAPI: PUTcountryBioMore");
 
-                            if (data.success) {
-                                let newUserData = {...Context.userData}
-                                newUserData.country_id = newCountryData.country_id
-                                newUserData.country_tag = newCountryData.country_tag
-                                newUserData.country_title = newCountryData.country_title
-                                newUserData.country_bio_main = formBioMain
-                                newUserData.country_bio_more = formBioMore
-                                newUserData.country_photo = newCountryData.country_photo
+        function sendData() {
+            let countryDataNoBio = {...newCountryData}
+            delete countryDataNoBio.country_bio_main
+            delete countryDataNoBio.country_bio_more
 
-                                localStorage.userData = JSON.stringify(newUserData)
-                                Context.setuserData(newUserData)
+            // Всю главную информацию отправляем всегда
+            GSAPI("PUTcountry", {token: Context.userData.token, data: JSON.stringify(countryDataNoBio)}, (data) => {
+                console.log("GSAPI: PUTcountry");
+    
+                // Если тег не уникальный
+                if (!data.success || !Object.keys(data).length) {
+                    seterrorText("Введенный тег занят")
+                    settagInputError(true)
+                    setdisableSubmitButton(false)
+                    setPageLoading(false)
+                    return
+                }
 
-                                // Удаляем старого юзера и загружаем нового
-                                let usersWithoutUser = Context.users.filter((user) => {return user.id !== Context.userData.id})
-                                usersWithoutUser.push(newUserData)
-                                Context.setusers(usersWithoutUser)
+                sendCountryBioMain()
+            })
+        }
 
-                                setPageLoading(false)
-                                Navigate("/countries/" + newCountryData.country_id)
-                                return
-                            }
+        function sendCountryBioMain() {
+            // Если главное описание не меняелось - проверка доп описания
+            if (newCountryData.country_bio_main === Context.userData.country_bio_main) {
+                sendCountryBioMore()
+                return
+            }
 
-                            seterrorText("Не удалось сохранить доп. описание")
-                            setbioMoreInputError(true)
-                            setdisableSubmitButton(false)
-                            setPageLoading(false)
-                        })
-                        return
-                    }
+            // Если доп описание поменялось - отправляем изменения
+            GSAPI("PUTcountryBioMain", {token: Context.userData.token, country_bio_main: newCountryData.country_bio_main}, (data) => {
+                console.log("GSAPI: PUTcountryBioMain");
 
+                if (!data.success || !Object.keys(data).length) {
                     seterrorText("Не удалось сохранить описание")
                     setbioMainInputError(true)
                     setdisableSubmitButton(false)
                     setPageLoading(false)
-                })
+                    return
+                }
+
+                // После отправки главного описания проверяем нужно ли отправить доп описание
+                sendCountryBioMore()
+                return
+            })
+        }
+
+        function sendCountryBioMore() {
+            // Если доп описание не меняелось - сохраняем информацию
+            if (newCountryData.country_bio_more === Context.userData.country_bio_more) {
+                saveCountryData()
                 return
             }
 
-            seterrorText("Введенный тег занят")
-            settagInputError(true)
-            setdisableSubmitButton(false)
+            // Если доп описание поменялось - отправляем изменения
+            GSAPI("PUTcountryBioMore", {token: Context.userData.token, country_bio_more: formBioMore}, (data) => {
+                console.log("GSAPI: PUTcountryBioMore");
+
+                if (!data.success || !Object.keys(data).length) {
+                    seterrorText("Не удалось сохранить доп. описание")
+                    setbioMoreInputError(true)
+                    setdisableSubmitButton(false)
+                    setPageLoading(false)
+                    return
+                }
+
+                // После отправки доп описания сохраняем информацию
+                saveCountryData()
+            })
+        }
+
+
+        // Сохранение информации локально
+        function saveCountryData() {
+            let newUserData = {...Context.userData}
+            newUserData.country_id = newCountryData.country_id
+            newUserData.country_tag = newCountryData.country_tag
+            newUserData.country_title = newCountryData.country_title
+            newUserData.country_bio_main = formBioMain
+            newUserData.country_bio_more = formBioMore
+            newUserData.country_photo = newCountryData.country_photo
+
+            localStorage.userData = JSON.stringify(newUserData)
+            Context.setuserData(newUserData)
+
+            // Удаляем старого юзера и загружаем нового
+            let usersWithoutUser = Context.users.filter((user) => {return user.id !== Context.userData.id})
+            usersWithoutUser.push(newUserData)
+            Context.setusers(usersWithoutUser)
+
             setPageLoading(false)
-        })
+            Navigate("/countries/" + newCountryData.country_id)
+        }
     }
 
     return (

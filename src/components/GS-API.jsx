@@ -3,7 +3,7 @@ import $ from "jquery";
 
 // Ссылка для обращение к api
 const devGoogleSheetURL = "https://script.google.com/macros/s/AKfycbyamHBWfy6Ym4Hm1vSEFXGxwlI9a3r9um7ILfrsfMi2/dev"
-const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbyHb7BOVh_6WDJP4sr9xePB95Ak5wZV4a2itILE056GvIaeuzRowKmRjaVm3rz6pDh9WA/exec"
+const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbyaG_1yKvP0Io9aouGEh46vcYFnmgw6f1IJMoDj3WeV4Nia5KH8ImLyMjApAOCpnhm0ig/exec"
 
 
 // Отправить запрос
@@ -14,16 +14,6 @@ export function GSAPI(action, data={}, func) {
         method: "GET",
         dataType: "JSONP",
         data: data,
-        success: func,
-    })
-}
-
-
-function TESTAPI(link, func) {
-    $.ajax({
-        url: "https://is.gd/create.php?format=json&url=" + link,
-        method: "GET",
-        dataType: "JSONP",
         success: func,
     })
 }

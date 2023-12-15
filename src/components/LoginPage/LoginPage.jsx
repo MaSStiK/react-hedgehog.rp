@@ -85,23 +85,24 @@ export default function LoginPage() {
         GSAPI("authorize", {token: token}, (data) => {
             setPageLoading(false)
 
-            // Если нашло по токену
-            if (data.success) {
-                // Если успех - сохраняем и открываем главную
-                let newUserData = data.data
-                newUserData.token = token // Ставим токен
-                localStorage.userData = JSON.stringify(newUserData)
-
-                Context.setuserData(newUserData)
-                Context.setisAdmin(newUserData.id === "291195777")
-                Navigate("/")
+            // Если не нашло по токену
+            if (!data.success || !Object.keys(data).length) {
+                seterrorText("Неверный логин или пароль")
+                setloginInputError(true)
+                setpasswordInputError(true)
+                setdisableSubmitButton(false)
                 return
             }
 
-            seterrorText("Неверный логин или пароль")
-            setloginInputError(true)
-            setpasswordInputError(true)
-            setdisableSubmitButton(false)
+            // Если успех - сохраняем и открываем главную
+            let newUserData = data.data
+            newUserData.token = token // Ставим токен
+            localStorage.userData = JSON.stringify(newUserData)
+
+            Context.setuserData(newUserData)
+            Context.setisAdmin(newUserData.id === "291195777")
+            Navigate("/")
+            return
         })
     }
 

@@ -111,6 +111,13 @@ export default function UserPage() {
                             </div>
                         </div>
 
+                        {/* Кнопка изменения страницы если отображается профиль владельда страницы */}
+                        {isSelfRender &&
+                            <Link to={"/users/edit"}>
+                                <button className="green">Изменить профиль (Скоро)</button>
+                            </Link>
+                        }
+
                         {/* Кнопка выхода если отображается профиль владельда страницы */}
                         {isSelfRender &&
                             <button className="red" onClick={handleExitProfile}>Выйти из профиля</button>
