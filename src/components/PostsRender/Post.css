@@ -1,0 +1,18 @@
+.post {
+    display: flex;
+    flex-direction: column;
+    gap: var(--block-gap);
+}
+
+.post__top {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--block-gap);
+}
+
+.post__top a {
+    width: calc(100% - 76px);
+}
+.post__top > small {
+    text-align: right;
+}

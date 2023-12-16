@@ -83,9 +83,9 @@ export default function App() {
                 })
             }
 
-            // Загрузка всех юзеров
-            GSAPI("GETnews", {}, (data) => {
-                console.log("GSAPI: GETnews");
+            // Загрузка всех новостей
+            GSAPI("GETnews", {offset: 0}, (data) => {
+                console.log("GSAPI: GETnews offset=0");
 
                 // После получения всех новостей обновляем список в контексте
                 setContextPosts(data)

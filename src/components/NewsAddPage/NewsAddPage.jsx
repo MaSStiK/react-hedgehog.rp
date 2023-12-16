@@ -1,5 +1,5 @@
 import { useEffect, useContext, useState, useRef } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { DataContext } from "../Context"
 import Aside from "../Aside/Aside"
 import CustomInput from "../CustomInput/CustomInput"
@@ -20,12 +20,12 @@ export default function NewsAddPage() {
     const [errorText, seterrorText] = useState("") // Текст ошибки
     const [titleInputError, settitleInputError] = useState(false) // Отображать ли ошибку инпута Названия страны
     const [textInputError, settextInputError] = useState(false) // Отображать ли ошибку инпута Названия страны
-    // const [photoInputError, setphotoInputError] = useState(false) // Отображать ли ошибку инпута Сслыка на фото
+    const [photoInputError, setphotoInputError] = useState(false) // Отображать ли ошибку инпута Сслыка на фото
     const [disableSubmitButton, setdisableSubmitButton] = useState(true) // Отключить ли кнопку сохранения
 
     const postTitleInput = useRef()
     const postTextInput = useRef()
-    // const countryPhotoInput = useRef()
+    const postPhotoInput = useRef()
 
     useEffect(() => {
         document.title = "Создание новости | Ежиное-РП"
@@ -38,6 +38,36 @@ export default function NewsAddPage() {
         settitleInputError(false)
         settextInputError(false)
         setdisableSubmitButton(postTitleInput.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в заголовке новости
+    }
+
+
+    // Проверка существования изображения
+    function checkImageSource(src) {
+        if (src) {
+            const img = new Image();
+            img.src = src;
+            
+            img.onload = () => {
+                if (img.naturalWidth < CONSTS.photoPxMin // Если картинка больше или меньше заданных значений
+                    || img.naturalHeight < CONSTS.photoPxMin
+                    || img.naturalWidth > CONSTS.photoPxMax
+                    || img.naturalHeight > CONSTS.photoPxMax) {
+                    seterrorText("Не удалось загрузить фотографию")
+                    // setcountryPhotoPreview("")
+                    return
+                }
+
+                // Если размер подходит - ставим превью
+                // setcountryPhotoPreview(src)
+            }
+
+            img.onerror = () => {
+                seterrorText("Не удалось загрузить фотографию")
+                // setcountryPhotoPreview("")
+            }
+        } else {
+            // setcountryPhotoPreview("")
+        }
     }
 
 
@@ -69,8 +99,8 @@ export default function NewsAddPage() {
         }
 
         // Проверка длины фото
-        // if (formPhoto.length > CONSTS.countryPhotoMax) {
-        //     seterrorText(`Ссылка на фотографию больше ${CONSTS.countryPhotoMax} символов`)
+        // if (formPhoto.length > CONSTS.photoMax) {
+        //     seterrorText(`Ссылка на фотографию больше ${CONSTS.photoMax} символов`)
         //     setphotoInputError(true)
         //     return
         // }
@@ -99,7 +129,7 @@ export default function NewsAddPage() {
             // Если все успешно
             if (data.success) {
                 let posts = [...Context.posts]
-                posts.push(newPostData)
+                posts.unshift(newPostData)
                 Context.setposts(posts)
 
                 // Navigate("/countries/" + Context.userData.country_id)
@@ -150,8 +180,25 @@ export default function NewsAddPage() {
                         ></textarea>
                     </CustomInput>
                     <small>Длина текста до {CONSTS.postTextMax} символов</small>
+                    
+                    {/* <div className="section-news-write__input-row">
+                        <CustomInput label="Добавить картинку" className="">
+                            <input
+                                ref={postPhotoInput}
+                                type="text"
+                                id="form-photo"
+                                className={photoInputError ? "error" : null}
+                                maxLength={CONSTS.photoMax}
+                                onInput={handleInputUpdate}
+                                required
+                            />
+                        </CustomInput>
 
-                    <h4>В следующем обновлении будет возможность добавлять картинки</h4>
+                        <button disabled={true}>Добавить</button>
+                    </div> */}
+                    
+                    {/* <small>Длина ссылки до {CONSTS.photoMax} символов<br />Размер изображения от {CONSTS.photoPxMin}px/{CONSTS.photoPxMin}px до {CONSTS.photoPxMax}px/{CONSTS.photoPxMax}px<br /><Link to={"https://is.gd"} target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small> */}
+
 
                     <p className={`text-red ${!errorText ? "hidden" : null}`}>{errorText}</p>
 

@@ -1,8 +1,8 @@
 import { useEffect, useContext, useState } from "react"
-import { Link } from "react-router-dom"
 import { DataContext } from "../Context"
-import CustomButton from "../CustomButton/CustomButton"
 import Aside from "../Aside/Aside"
+import PostsRender from "../PostsRender/PostsRender"
+import { GSAPI } from "../GS-API"
 
 
 import "./NewsPage.css"
@@ -12,17 +12,36 @@ import "./NewsPage-phone.css"
 export default function NewsPage() {
     const Context = useContext(DataContext)
 
-    const [postsRender, setpostsRender] = useState([]);
+    const [disableLoadButton, setdisableLoadButton] = useState(false);
+    const [showLoadButton, setshowLoadButton] = useState(true);
+    const [postsData, setpostsData] = useState([]);
+
+    let postsOffset = 0
 
     useEffect(() => {
         document.title = "Новости | Ежиное-РП"
     })
 
-    useEffect(() => {
-        // При обновлении контекста так же обновляется и массив
-        setpostsRender([...Context.posts].reverse())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [Context.posts])
+    const loadMorePosts = () => {
+        setdisableLoadButton(true)
+        postsOffset += 10
+
+        // Загрузка всех новостей
+        GSAPI("GETnews", {offset: postsOffset}, (data) => {
+            console.log("GSAPI: GETnews offset=" + postsOffset);
+
+            // После получения всех новостей обновляем список в контексте
+            let posts = [...Context.posts]
+            Context.setposts(posts.concat(data))
+
+            // Если постов меньше 10 - не загружаем больше
+            if (data.length < 10) {
+                setshowLoadButton(false)
+            }
+
+            setdisableLoadButton(false)
+        })
+    }
 
     return (
         <>
@@ -31,30 +50,13 @@ export default function NewsPage() {
             <article id="article-news">
                 <h4 className="page-title text-dark">/ Новости</h4>
 
-                {postsRender.map((post) => {
-                    let postAuthor = Context.users.find(user => user.country_id === post.country_id)
+                <PostsRender posts={Context.posts} users={Context.users} />
 
-                    // Если автора нету - не возвращаем
-                    if (postAuthor) {
-                        return <section className="section-news__column" key={post.post_id}>
-                            <Link to={"/countries/" + postAuthor.country_id} key={postAuthor.country_id}>
-                                <CustomButton
-                                    src={postAuthor.country_photo}
-                                    text={postAuthor.country_title}
-                                    subText={postAuthor.country_tag} 
-                                />
-                            </Link>
-                            
-                            <h3>{post.post_title}</h3>
-
-                            {post.post_text &&
-                                <p>{post.post_text}</p>
-                            }
-                        </section>
-                    }
-
-                    return null
-                })}
+                {showLoadButton &&
+                    <section className="section-news__row">
+                        <button onClick={loadMorePosts} disabled={disableLoadButton}>Загрузить еще</button>
+                    </section>
+                }
             </article>
         </>
     )

@@ -9,3 +9,17 @@
     flex-direction: column;
     gap: var(--block-gap);
 }
+
+.section-news-write small .text-link {
+    font-size: var(--p-small-size);
+}
+
+.section-news-write__input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--block-gap);
+}
+
+.section-news-write__input-row button {
+    width: 200px;
+}

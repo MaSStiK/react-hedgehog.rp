@@ -8,7 +8,6 @@ import { GSAPI } from "../GS-API"
 import { LINKAPI } from "../LINK-API"
 
 
-
 import "./CountryEditPage.css"
 
 export default function CountryEditPage() {
@@ -66,10 +65,10 @@ export default function CountryEditPage() {
             img.src = src;
             
             img.onload = () => {
-                if (img.naturalWidth < CONSTS.countryPhotoPxMin // Если картинка больше или меньше заданных значений
-                    || img.naturalHeight < CONSTS.countryPhotoPxMin
-                    || img.naturalWidth > CONSTS.countryPhotoPxMax
-                    || img.naturalHeight > CONSTS.countryPhotoPxMax) {
+                if (img.naturalWidth < CONSTS.photoPxMin // Если картинка больше или меньше заданных значений
+                    || img.naturalHeight < CONSTS.photoPxMin
+                    || img.naturalWidth > CONSTS.photoPxMax
+                    || img.naturalHeight > CONSTS.photoPxMax) {
                     seterrorText("Не удалось загрузить фотографию")
                     setcountryPhotoPreview("")
                     return
@@ -147,8 +146,8 @@ export default function CountryEditPage() {
 
 
         // Проверка длины фото
-        if (formPhoto.length > CONSTS.countryPhotoMax) {
-            seterrorText(`Ссылка на фотографию больше ${CONSTS.countryPhotoMax} символов`)
+        if (formPhoto.length > CONSTS.photoMax) {
+            seterrorText(`Ссылка на фотографию больше ${CONSTS.photoMax} символов`)
             setphotoInputError(true)
             return
         }
@@ -363,7 +362,7 @@ export default function CountryEditPage() {
                             type="text"
                             id="form-photo"
                             className={photoInputError ? "error" : null}
-                            maxLength={CONSTS.countryPhotoMax}
+                            maxLength={CONSTS.photoMax}
                             onInput={() => {
                                 checkImageSource(countryPhotoInput.current.value) // Проверяем фотографию
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
@@ -372,7 +371,7 @@ export default function CountryEditPage() {
                         />
                     </CustomInput>
 
-                    <small>Длина ссылки до {CONSTS.countryPhotoMax} символов<br />Размер изображения от {CONSTS.countryPhotoPxMin}px/{CONSTS.countryPhotoPxMin}px до {CONSTS.countryPhotoPxMax}px/{CONSTS.countryPhotoPxMax}px<br />Замена на стандартное изображение если поле пустое<br /><Link to={"https://is.gd"} target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small>
+                    <small>Длина ссылки до {CONSTS.photoMax} символов<br />Размер изображения от {CONSTS.photoPxMin}px/{CONSTS.photoPxMin}px до {CONSTS.photoPxMax}px/{CONSTS.photoPxMax}px<br />Замена на стандартное изображение если поле пустое<br /><Link to={"https://is.gd"} target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small>
                     <img src={countryPhotoPreview} alt="preview" className={countryPhotoPreview ? null : "hidden"} />
                     
                     <CustomInput label={`Описание страны (${countryBioMainLenght} / ${CONSTS.countryBioMainMax})`}>

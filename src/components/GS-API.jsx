@@ -3,14 +3,14 @@ import $ from "jquery";
 
 // Ссылка для обращение к api
 const devGoogleSheetURL = "https://script.google.com/macros/s/AKfycbyamHBWfy6Ym4Hm1vSEFXGxwlI9a3r9um7ILfrsfMi2/dev"
-const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbyaG_1yKvP0Io9aouGEh46vcYFnmgw6f1IJMoDj3WeV4Nia5KH8ImLyMjApAOCpnhm0ig/exec"
+const GoogleSheetURL = "https://script.google.com/macros/s/AKfycbxMbVPeLV9uzA4G9sI2_pC14hsKaFjkPEn1xkP4maiWLmZEC3dTLadSXk39g1FwDKTh/exec"
 
 
 // Отправить запрос
 export function GSAPI(action, data={}, func) {
     $.ajax({
         crossDomain: true,
-        url: GoogleSheetURL + "?action=" + action,
+        url: devGoogleSheetURL + "?action=" + action,
         method: "GET",
         dataType: "JSONP",
         data: data,

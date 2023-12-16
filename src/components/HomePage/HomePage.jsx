@@ -2,6 +2,7 @@ import { useEffect, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { DataContext } from "../Context"
 import Aside from "../Aside/Aside"
+import PostsRender from "../PostsRender/PostsRender"
 
 import "./HomePage.css"
 import "./HomePage-phone.css"
@@ -39,6 +40,8 @@ export default function HomePage() {
 
                     <iframe width="526" height="280" src="https://www.youtube.com/embed/niRy4Ygg7_g?si=CY2X1VXnpdn5SiW2" title="YouTube video player" frameBorder="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
                 </section>
+
+                <PostsRender posts={[...Context.posts].slice(0, 5)} users={Context.users} />
 
                 <section>
                     <Link to={"/news"}>
