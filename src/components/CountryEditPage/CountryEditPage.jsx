@@ -58,7 +58,7 @@ export default function CountryEditPage() {
     }, [Context.userData])
 
 
-    // Проверка существования изображения
+    // Проверка существования картинки
     function checkImageSource(src) {
         if (src) {
             const img = new Image();
@@ -69,8 +69,9 @@ export default function CountryEditPage() {
                     || img.naturalHeight < CONSTS.photoPxMin
                     || img.naturalWidth > CONSTS.photoPxMax
                     || img.naturalHeight > CONSTS.photoPxMax) {
-                    seterrorText("Не удалось загрузить фотографию")
+                    seterrorText("Не удалось загрузить картинку")
                     setcountryPhotoPreview("")
+                    setphotoInputError(true)
                     return
                 }
 
@@ -79,8 +80,9 @@ export default function CountryEditPage() {
             }
 
             img.onerror = () => {
-                seterrorText("Не удалось загрузить фотографию")
+                seterrorText("Не удалось загрузить картинку")
                 setcountryPhotoPreview("")
+                setphotoInputError(true)
             }
         } else {
             setcountryPhotoPreview("")
@@ -147,7 +149,7 @@ export default function CountryEditPage() {
 
         // Проверка длины фото
         if (formPhoto.length > CONSTS.photoMax) {
-            seterrorText(`Ссылка на фотографию больше ${CONSTS.photoMax} символов`)
+            seterrorText(`Ссылка на картинку больше ${CONSTS.photoMax} символов`)
             setphotoInputError(true)
             return
         }
@@ -364,14 +366,14 @@ export default function CountryEditPage() {
                             className={photoInputError ? "error" : null}
                             maxLength={CONSTS.photoMax}
                             onInput={() => {
-                                checkImageSource(countryPhotoInput.current.value) // Проверяем фотографию
+                                checkImageSource(countryPhotoInput.current.value) // Проверяем картинку
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
                             }}
                             required
                         />
                     </CustomInput>
 
-                    <small>Длина ссылки до {CONSTS.photoMax} символов<br />Размер изображения от {CONSTS.photoPxMin}px/{CONSTS.photoPxMin}px до {CONSTS.photoPxMax}px/{CONSTS.photoPxMax}px<br />Замена на стандартное изображение если поле пустое<br /><Link to={"https://is.gd"} target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small>
+                    <small>Длина ссылки до {CONSTS.photoMax} символов<br />Размер картинки от {CONSTS.photoPxMin}px/{CONSTS.photoPxMin}px до {CONSTS.photoPxMax}px/{CONSTS.photoPxMax}px<br />Замена на стандартную картинку если поле пустое</small>
                     <img src={countryPhotoPreview} alt="preview" className={countryPhotoPreview ? null : "hidden"} />
                     
                     <CustomInput label={`Описание страны (${countryBioMainLenght} / ${CONSTS.countryBioMainMax})`}>
@@ -396,7 +398,7 @@ export default function CountryEditPage() {
                             className={bioMoreInputError ? "error" : null}
                             maxLength={CONSTS.countryBioMoreMax}
                             onInput={() => {
-                                setcountryBioMoreLenght(countryBioMoreInput.current.value.length) // Обновляем значение длины описания
+                                setcountryBioMoreLenght(countryBioMoreInput.current.value.length) // Обновляем значение длины доп описания
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
                             }}
                             required 

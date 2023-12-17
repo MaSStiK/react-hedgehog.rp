@@ -1,10 +1,12 @@
 import { useEffect, useContext, useState, useRef } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { DataContext } from "../Context"
 import Aside from "../Aside/Aside"
 import CustomInput from "../CustomInput/CustomInput"
 import { CONSTS, setPageLoading } from "../Global"
 import { GSAPI } from "../GS-API"
+import { LINKAPI } from "../LINK-API"
+
 
 
 import "./NewsAddPage.css"
@@ -15,14 +17,18 @@ export default function NewsAddPage() {
     const Navigate = useNavigate()
     const Context = useContext(DataContext)
 
-    const [postTextLenght, setpostTextLenght] = useState(0);
+    const [postTextLenght, setpostTextLenght] = useState(0)
+    const [postPhotoPreview, setpostPhotoPreview] = useState("")
+    const [showAttachments, setshowAttachments] = useState(true) // Показывать ли блок добавления картинок
+    const [attachments, setattachments] = useState([]) // Список картинок
 
     const [errorText, seterrorText] = useState("") // Текст ошибки
     const [titleInputError, settitleInputError] = useState(false) // Отображать ли ошибку инпута Названия страны
     const [textInputError, settextInputError] = useState(false) // Отображать ли ошибку инпута Названия страны
     const [photoInputError, setphotoInputError] = useState(false) // Отображать ли ошибку инпута Сслыка на фото
+    const [disableAddButton, setdisableAddButton] = useState(true) // Отключить ли кнопку Добавления картинки
     const [disableSubmitButton, setdisableSubmitButton] = useState(true) // Отключить ли кнопку сохранения
-
+    
     const postTitleInput = useRef()
     const postTextInput = useRef()
     const postPhotoInput = useRef()
@@ -32,16 +38,7 @@ export default function NewsAddPage() {
     })
 
 
-    // При обновлении любого из инпутов
-    const handleInputUpdate = () => {
-        seterrorText("")
-        settitleInputError(false)
-        settextInputError(false)
-        setdisableSubmitButton(postTitleInput.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в заголовке новости
-    }
-
-
-    // Проверка существования изображения
+    // Проверка существования картинки
     function checkImageSource(src) {
         if (src) {
             const img = new Image();
@@ -52,23 +49,61 @@ export default function NewsAddPage() {
                     || img.naturalHeight < CONSTS.photoPxMin
                     || img.naturalWidth > CONSTS.photoPxMax
                     || img.naturalHeight > CONSTS.photoPxMax) {
-                    seterrorText("Не удалось загрузить фотографию")
-                    // setcountryPhotoPreview("")
+                    seterrorText("Не удалось загрузить картинку")
+                    setphotoInputError(true)
+                    setpostPhotoPreview("")
                     return
                 }
 
                 // Если размер подходит - ставим превью
-                // setcountryPhotoPreview(src)
+                setpostPhotoPreview(src)
+                setdisableAddButton(false)
             }
 
             img.onerror = () => {
-                seterrorText("Не удалось загрузить фотографию")
-                // setcountryPhotoPreview("")
+                seterrorText("Не удалось загрузить картинку")
+                setphotoInputError(true)
+                setpostPhotoPreview("")
             }
         } else {
-            // setcountryPhotoPreview("")
+            setpostPhotoPreview("")
         }
     }
+
+
+    // При обновлении любого из инпутов
+    const handleInputUpdate = () => {
+        seterrorText("")
+        settitleInputError(false)
+        settextInputError(false)
+        setphotoInputError(false)
+        setdisableSubmitButton(postTitleInput.current.value.length < CONSTS.countryTitleMin) // Если меньше 1 символа в заголовке новости
+    }
+
+    function addAttachment() {
+        // Отключаем кнопку и превью
+        setdisableAddButton(true)
+        setpostPhotoPreview("")
+
+        LINKAPI(postPhotoInput.current.value, (data) => {
+            postPhotoInput.current.value = ""
+            if (data.shorturl) {
+                setattachments(prevState => [...prevState, {id: Date.now(), url: data.shorturl}])
+                return
+            }
+
+            seterrorText("Не удалось загрузить ")
+            setphotoInputError(true)
+        })
+    }
+
+    useEffect(() => {
+        if (attachments.length < 10) {
+            setshowAttachments(true)
+        } else {
+            setshowAttachments(false)
+        }
+    }, [attachments])
 
 
     // Ивент субмит у формы создания новости
@@ -99,12 +134,11 @@ export default function NewsAddPage() {
         }
 
         // Проверка длины фото
-        // if (formPhoto.length > CONSTS.photoMax) {
-        //     seterrorText(`Ссылка на фотографию больше ${CONSTS.photoMax} символов`)
-        //     setphotoInputError(true)
-        //     return
-        // }
-
+        if (attachments.length > CONSTS.attachmentsCountMax) {
+            seterrorText(`Картинок больше ${CONSTS.attachmentsCountMax}`)
+            setphotoInputError(true)
+            return
+        }
 
         // Отключаем кнопку только в случае если прошло все проверки
         setdisableSubmitButton(true)
@@ -119,7 +153,7 @@ export default function NewsAddPage() {
             post_id: Context.userData.country_id + "_" + dateNow, // id новости
             post_title: formTitle, // Заголовок новости
             post_text: formText, // Текст новости
-            attachments: "{}", // Прикрепленные картинки
+            attachments: JSON.stringify(Array.from(attachments, (attach) => attach.url)), // Прикрепленные картинки
             timestamp: dateNow // Дата создани новости
         }
 
@@ -173,7 +207,7 @@ export default function NewsAddPage() {
                             className={textInputError ? "error" : null}
                             maxLength={CONSTS.postTextMax}
                             onInput={() => {
-                                setpostTextLenght(postTextInput.current.value.length) // Обновляем значение длины описания
+                                setpostTextLenght(postTextInput.current.value.length) // Обновляем значение длины текста
                                 handleInputUpdate() // Так же тригирим апдейт всех полей
                             }}
                             required 
@@ -181,24 +215,43 @@ export default function NewsAddPage() {
                     </CustomInput>
                     <small>Длина текста до {CONSTS.postTextMax} символов</small>
                     
-                    {/* <div className="section-news-write__input-row">
-                        <CustomInput label="Добавить картинку" className="">
-                            <input
-                                ref={postPhotoInput}
-                                type="text"
-                                id="form-photo"
-                                className={photoInputError ? "error" : null}
-                                maxLength={CONSTS.photoMax}
-                                onInput={handleInputUpdate}
-                                required
-                            />
-                        </CustomInput>
-
-                        <button disabled={true}>Добавить</button>
-                    </div> */}
+                    {/* Отображение загруженных картинок */}
+                    {attachments.map((attach) => {
+                        return <div className="section-news-write__attachment-preview" key={attach.id}>
+                            <img src={attach.url} alt="preview" />
+                            <button onClick={() => {
+                                setattachments(attachments.filter(el => el.id !== attach.id))
+                            }}
+                            >Удалить</button>
+                        </div>
+                    })}
                     
-                    {/* <small>Длина ссылки до {CONSTS.photoMax} символов<br />Размер изображения от {CONSTS.photoPxMin}px/{CONSTS.photoPxMin}px до {CONSTS.photoPxMax}px/{CONSTS.photoPxMax}px<br /><Link to={"https://is.gd"} target="_blank" rel="noopener noreferrer" className="text-link">Сжатие ссылки</Link></small> */}
+                    {/* Отображение блок добавления картинок */}
+                    {showAttachments &&
+                        <>
+                            <div className="section-news-write__input-row">
+                                <CustomInput label="Добавить картинку">
+                                    <input
+                                        ref={postPhotoInput}
+                                        type="text"
+                                        id="form-photo"
+                                        className={photoInputError ? "error" : null}
+                                        maxLength={CONSTS.photoMax}
+                                        onInput={() => {
+                                            checkImageSource(postPhotoInput.current.value)
+                                            handleInputUpdate() // Так же тригирим апдейт всех полей
+                                        }}
+                                        required
+                                    />
+                                </CustomInput>
 
+                                <button className="green" onClick={addAttachment} disabled={disableAddButton}>Добавить</button>
+                            </div>
+                            <small>Длина ссылки до {CONSTS.photoMax} символов<br />Размер картинки от {CONSTS.photoPxMin}px/{CONSTS.photoPxMin}px до {CONSTS.photoPxMax}px/{CONSTS.photoPxMax}px<br />Максимум {CONSTS.attachmentsCountMax} картинок</small>
+                            <img src={postPhotoPreview} alt="preview" className={postPhotoPreview ? null : "hidden"} />
+                        </>
+                    }
+                    
 
                     <p className={`text-red ${!errorText ? "hidden" : null}`}>{errorText}</p>
 

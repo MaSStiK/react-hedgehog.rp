@@ -20,10 +20,9 @@ export const CONSTS = {
     postTitleMin: 1,
     postTitleMax: 128,
     postTextMax: 850,
-    attachmentsMax: 256,
     attachmentsCountMax: 10,
 
-    photoMax: 256,
+    photoMax: 512,
     photoPxMin: 40,
     photoPxMax: 1920,
 }

@@ -154,16 +154,3 @@ input:-webkit-autofill:focus {
     width: var(--button-img-size);
     height: var(--button-img-size);
 }
-
-/* Кпнока с полем пароля */
-/* <div class="input-wrapper" id="password-input">
-    <input type="password" placeholder="Пароль">
-    <button class="button-icon" type="button"><img src="../assets/images/icons/EyeOpen.svg" alt="show-password"></button>                    
-</div> */
-
-
-/* Кпнока с иконкой */
-/* <div class="input-wrapper">
-    <input type="text" id="search">
-    <img src="../assets/images/icons/Search.svg" alt="search">
-</div> */

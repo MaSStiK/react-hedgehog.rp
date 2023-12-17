@@ -4,6 +4,8 @@ import { DataContext } from "../Context"
 import CustomButton from "../CustomButton/CustomButton"
 import Aside from "../Aside/Aside"
 import imgBasePhoto from "../../assets/replace/base-photo-empty.png"
+import PostsRender from "../PostsRender/PostsRender"
+
 
 import "./CountryPage.css"
 import "./CountryPage-phone.css"
@@ -42,9 +44,6 @@ export default function CountryPage() {
             setcountryData({})
             return
         }
-
-        findedUser.country_bio_main = findedUser.country_bio_main.replaceAll("<br>","\n")
-        findedUser.country_bio_more = findedUser.country_bio_more.replaceAll("<br>","\n")
 
         setcountryData(findedUser)
         document.title = findedUser.country_title + " | Ежиное-РП"
@@ -115,12 +114,17 @@ export default function CountryPage() {
                                 }
 
                             </section>
+                            
+                            {/* Кнопка написать новость если страна авторизованного */}
+                            {isSelfRender &&
+                                <section>
+                                    <Link to={"/news/add"}>
+                                        <button>Написать новость</button>
+                                    </Link>
+                                </section>
+                            }
 
-                            <section>
-                                <Link to={"/news/add"}>
-                                    <button>Написать новость</button>
-                                </Link>
-                            </section>
+                            <PostsRender posts={[...Context.posts].filter(post => post.country_id === URLparams.id)} users={Context.users} />
                         </>
 
                         // Если страна не найдена, будет показан только когда будет ошибка

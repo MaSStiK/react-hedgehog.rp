@@ -14,7 +14,6 @@ export default function NewsPage() {
 
     const [disableLoadButton, setdisableLoadButton] = useState(false);
     const [showLoadButton, setshowLoadButton] = useState(true);
-    const [postsData, setpostsData] = useState([]);
 
     let postsOffset = 0
 

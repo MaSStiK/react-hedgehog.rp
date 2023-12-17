@@ -2,8 +2,7 @@ import { Link } from "react-router-dom"
 import CustomButton from "../CustomButton/CustomButton"
 
 import "./Post.css"
-import { useEffect } from "react"
-
+import "./Post-phone.css"
 
 export default function PostsRender(props) {
     return (
@@ -28,6 +27,8 @@ export default function PostsRender(props) {
 
                 let year = date.getFullYear()
 
+                let postAttachments = JSON.parse(post.attachments) // Картинки в посте
+
                 // Если автора нету - не возвращаем
                 if (postAuthor) {
                     return <section className="post" key={post.post_id}>
@@ -42,12 +43,23 @@ export default function PostsRender(props) {
                             <small className="text-gray">{`${day}.${month}.${year}`}<br />{`${hours}:${minutes}`}</small>
                         </div>
                         
-                        
                         <h3>{post.post_title}</h3>
 
                         {post.post_text &&
                             <p>{post.post_text}</p>
                         }
+
+                        {postAttachments.length
+                            ? <div className="post__attachments-wrapper">
+                                <div className="post__attachments">
+                                    {postAttachments.map((attach) => {
+                                        return <img src={attach} alt="post-attachment" />
+                                    })}
+                                </div>
+                              </div> 
+                            : null
+                        }
+
                     </section>
                 }
 
@@ -58,9 +70,7 @@ export default function PostsRender(props) {
 }
 
 
-// CustomButton.defaultProps = {
-//     id: "",
-//     src: imgBasePhoto,
-//     text: "",
-//     subText: ""
-// }
+CustomButton.defaultProps = {
+    posts: [],
+    users: []
+}
