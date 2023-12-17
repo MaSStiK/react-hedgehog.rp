@@ -35,4 +35,5 @@
     display: inline-block;
     height: 350px;
     object-fit: contain;
+    border-radius: var(--border-radius);
 }

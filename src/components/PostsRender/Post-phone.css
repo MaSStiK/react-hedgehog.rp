@@ -7,6 +7,7 @@
     .post p {
         font-size: var(--p-small-size);
     }
+
     .post__attachments img {
         height: 150px;
     }
